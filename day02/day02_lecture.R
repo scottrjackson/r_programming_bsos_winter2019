@@ -72,6 +72,9 @@
 # - can (usually) use up/down arrows to scroll through previous commands
 
 # Basic calculator examples (type along!)
+2 + 3
+2 * 43
+46/4
 
 
 # Some syntax basics
@@ -79,7 +82,11 @@
 # - no "line end" character
 # - "plus" sign instead of ">" prompt when a line is "incomplete"
 #    can hit Esc (or equivalent) to bail out
-
+2 + 2
+2+2
+2       +        2
+#    2 +     3
+    
 
 #########
 # Scripts
@@ -104,21 +111,39 @@
 ##############################
 # Objects: creating and naming
 
-# assignment: creating something in your workspace
+2 + 3
 
+# assignment: creating something in your workspace
+x <- 2 + 3
+y <- 43 * 760
+x
+y
+
+y/3
+x^5
+
+# alternatives to <-
+z = 5 # same as z <- 5
+
+5 -> z
+
+x<-5 # okay, but ugly
 
 # checking the workspace contents
-
+objects()
+ls()
 
 # removing things from the workspace
 rm("x")
 objects()
-x <- 10
-y <- 20
-mean(x, y)
 
 # rm(list = objects()) # remove everything from the workspace
+x <- 37
+y <- 5
+z <- x + y
+z
 
+rm(list = objects())
 
 # object naming conventions
 # cannot start with a number
@@ -136,7 +161,6 @@ big_long_name_that_describes_things_in_detail <- 10 # not a great name
 # RStudio helps with #2
 # tab-completion
 
-
 # some different "style" options
 camelCase <- 10
 thisIsaVariableInCamelCase <- 11
@@ -150,10 +174,13 @@ underscore_delimited <- 14
 
 
 # case matters
-
-
+x <- 10
+X <- 5
+x
+X
+I <- 10
+l <- 5
 # upshot: avoid upper-case or "ambiguous" characters to help avoid confusion
-
 
 ######################
 # Structure of objects
@@ -163,12 +190,33 @@ underscore_delimited <- 14
 # seq() for sequences
 # x:y as a shortcut for seq(from = x, to = y, by = 1)
 # [] for subsetting
+x <- c(1, 2, 3, 4)
+x
+seq(from = 1, to = 20)
+seq(from = 2, to = 20, by = 2)
+1:100
 
+x <- c(4, 60, 5, 7)
+x
+x[3]
+x[4]
 
+y <- seq(3, 60, 3)
+y
+y[7:11]
+
+y[c(7, 11, 8, 13, 2)]
+
+y[ ] # everything
+
+z <- y[c(7, 11, 8, 13, 2)]
+z
 
 # syntax note: [square brackets] are used ONLY for "extraction"/subsetting
 #              (parentheses) are used in math, and in functions (more below)
-
+(3 + 2)*5
+3 + (2 * 5)
+3 + 2 * 5
 
 ##########
 # Vectors:
