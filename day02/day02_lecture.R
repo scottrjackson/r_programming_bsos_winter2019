@@ -234,13 +234,28 @@ z
 # - columns act as vectors (all same data type)
 # - ideal standard format for (most) data
 # - columns = variables, rows = cases
+data()
 ?sleep
 
-# [rows, columns]  
+# [rows, columns]
+sleep
+sleep[1, 2]
+sleep[2, 1]
+
 # names
+names(sleep)
+colnames(sleep)
+
+sleep[2, "extra"] # names >> numbers (usually)
+
+sleep["2", "extra"] # in practice, don't use rownames!
+
+sleep[1:5, c("ID", "extra")]
+
 # $
-
-
+sleep$extra
+sleep$extra[1:5]
+(sleep$extra * 4)[1:5]
 
 # Some handy functions for inspecting data frames
 # head(), tail()
@@ -248,7 +263,19 @@ z
 # summary()
 # colnames()
 # View()
+head(sleep)
+tail(sleep)
+head(sleep, 10)
+summary(sleep)
+colnames(sleep)
+View(sleep)
 
+mysleep <- sleep
+
+colnames(sleep)
+columns.to.keep <- c("ID", "extra")
+
+sleep[, columns.to.keep]
 
 ###########
 # Functions
@@ -264,14 +291,11 @@ z
 
 # examples: rnorm(), t.test()
 # with made-up vectors
+rnorm(10)
+x <- rnorm(10000)
 
-
-################
-# Quick practice
-
-# using [ ] and <-, pull out some numbers from the sleep data, and compare with t.test
-
-
+set.seed(42)
+rnorm(5)
 
 ###################
 # More on arguments
@@ -280,18 +304,62 @@ z
 # - optional vs. required
 
 # getting help()
+?rnorm
+help(rnorm)
+rnorm(10)
+rnorm(n = 10)
+rnorm(5, 10, 3)
+x <- rnorm(10000, 10, 3)
+mean(x)
+sd(x)
 
+example(rnorm)
+
+x <- rnorm(10000, mean = 10, sd = 3)
+rnorm(5, mean = 10)
+rnorm(5, sd = 70)
+rnorm(5, 10, 2)
+rnorm(5, sd = 2, mean = 10)
+rnorm(5, sd = 2, 10)
+rnorm(5, mean = 10, sd = 2)
 
 # finding help
 # Google
 # "fuzzy matching" with ??
+??"t-test"
 
 # sometimes hints from tab-completion in RStudio
 
 # can be sloppy with argument names
+rnorm(5, me = 10)
+
+x <- rnorm(20, 2, 1)
+y <- rnorm(20, 4, 1)
+
+t.test(x, y)
+?t.test
+
+ttest.result <- t.test(x, y)
+print(ttest.result)
+names(ttest.result)
+
+################
+# Quick practice
+
+# using [ ] and <-, pull out some numbers from the sleep data, and compare with t.test
+sleep
+
+x <- sleep[1:10, 1]
+y <- sleep[11:20, 1]
+t.test(x, y)
+t.test(sleep[1:10, 1], sleep[11:20, 1])
+
+x <- sleep$extra[1:10]
+y <- sleep$extra[11:20]
+x <- sleep[1:10, "extra"]
 
 # return to t-test (options)
-
+t.test(x, y, paired = TRUE)
 
 ########################################
 # PRACTICE TIME!
@@ -312,7 +380,7 @@ install.packages(c("ggplot2", "tidyr"))
 library(ggplot2)
 install.packages("tidyverse") # https://www.tidyverse.org/
 
-# update.packages()
+# update.packages() # get latest version of a package
 
 ##############
 # Environments
