@@ -28,6 +28,9 @@ cor(setosas$Sepal.Length, setosas$Petal.Length)
 cor(versicolors$Sepal.Length, versicolors$Petal.Length)
 cor(virginicas$Sepal.Length, versicolors$Petal.Length)
 
+setosa.sepal.length <- setosas$Sepal.Length
+setosa.petal.length <- setosaa$Petal.Length
+
 # 4. Look at the built-in data set ToothGrowth. Use a t-test to compare tooth
 #    lengths in the different supplement types.
 #    HINT: first use head() and summary() to "peek" at the data

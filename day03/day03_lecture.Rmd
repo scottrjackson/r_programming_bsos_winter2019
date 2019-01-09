@@ -7,6 +7,14 @@ output: html_document
 
 # Questions?
 
+## Working directory
+
+```{r}
+getwd()
+# setwd()
+
+```
+
 # R Markdown vs. scripts
 Sweave: the original "reproducible document", mix of LaTeX and R
 
@@ -49,14 +57,14 @@ More documentation on Markdown and R Markdown:
 ```{r}
 x <- rnorm(100, mean = 0, sd = 2)
 y <- rnorm(100, mean = 1, sd = 1)
-ttest.results <- t.test(x, y)
-ttest.results
+# ttest.results <- t.test(x, y)
+# ttest.results
 
 # what if ttest.results took minutes/hours to compute?
-save(ttest.results, file = "big important object.RData")
-ttest.results
-rm(ttest.results)
-ttest.results
+# save(ttest.results, file = "big important object.RData")
+# ttest.results
+# rm(ttest.results)
+# ttest.results
 load("big important object.RData")
 ttest.results
 
@@ -138,17 +146,43 @@ A few handy things with numbers:
 
 ```{r}
 # floating point pitfalls
+x <- 0.1 + 0.2
+x
+x == 0.3
 
 # "e" notation for really big numbers
 1e4
 
 # round(), floor(), ceiling()
+x2 <- round(x, 1)
+x2 == 0.3
 
 # sample(), rnorm(), rbinom()
+sample(10)
 
-# the r/p/d families
+?sample
+
+sample(1:10, size = 4, replace = FALSE)
+sample(1:10, size = 4, replace = FALSE)
+sample(1:10, size = 12, replace = FALSE)
+
+sample(1:10, size = 12, replace = TRUE)
+
+rnorm(10)
+
+rbinom(5, size = 10, prob = .2)
+
+many.flips <- rbinom(1e6, size = 10, prob = .2)
+mean(many.flips)
+
+# the r/p/d/q families
+
 
 # quantile()
+x <- rnorm(1e5, mean = 2, sd = 5)
+quantile(x)
+
+quantile(x, seq(0, 1, .1))
 
 ```
 
@@ -170,17 +204,84 @@ A few handy things with numbers:
     - `&&` and `||`  for more specific programming situations
     
 ```{r}
+# operators vs. functions
+2 + 2
+`+`(2, 2)
+
 # basic forms
+1 > 2
+1 < 2
+
+class(1)
+class(TRUE)
+class(1 < 2)
+class("1")
+
+1 == 2
+
+x <- "a string"
+x == "a string"
+
+x != "a string"
+
+x != 2
+
+x <- 1:5
+
+x <= 3
+x >= 3
+
+TRUE & TRUE
+TRUE & FALSE
+
+TRUE | FALSE
+
+x <- 1:6
+x < 3
+x > 4
+
+(x > 2) & (x < 5) # parens not necessary here
+! TRUE
+x > 2
+!x > 2
+!(x > 2)
+
+!(x > 4 | x < 3)
 
 # "shortcut" forms (avoid!)
+F
+T
+
+F <- TRUE
+F # uh oh
 
 # examples of comparisons
 
 # which()
+x < 5
+
+set.seed(42)
+x <- sample(1:10, 100, replace = TRUE)
+x == 7
+which(x == 7)
 
 # logicals for subsetting
 
 # %in%
+all.values <- c("a", "b", "c", "d")
+x <- sample(all.values, 100, TRUE)
+
+try1 <- x == c("a", "b") # NOPE
+try2 <- x %in% c("a", "b") # this is usually what you want
+
+x1 <- c(1, 2, 7, 32)
+x2 <- c(1, 5, 8, 32)
+
+x1 == x2
+
+x1 == c(1, 2)
+
+identical()
 
 ```
 
@@ -188,220 +289,6 @@ PRACTICE!  #0 -- #2 in the "day03_practice.Rmd" file
 
 Try "knitting" the result!
 
-## Characters
-  - `as.character()` converts to characters
-  - more primitive than factors
-  - can manipulate with regular expressions, other text functions
+  - need to set "Knit directory" to the project directory!
+  - can be down with the Knit dropdown
 
-Some handy text stuff
-
-```{r}
-# cat(), print()
-
-# special characters: \t, \n, "escaping"
-
-# nchar()
-
-# paste(), strsplit()
-
-# stringr package
-
-# grep(), grepl(), gsub()
-
-```
-
-## Factors
-  - Actually numbers under the hood
-  - Act like numbers + labels
-  - VERY useful for many kinds of analyses
-  - if a column is a *property* of data (not a measure itself), factors are usually best
-    - groupings = good as factors
-    - conditions = good as factors
-  - if a column is *data*, maybe consider keeping it a string
-    - free response answers = bad as factors
-  - `as.factor()` coerces to a factor
-  - `factor()` creates a factor
-  - factors have *levels*: categories
-  - `stringsAsFactors` : option for how to read in character vectors
-    - = FALSE if you don't want to read in characters as factors
-
-```{r}
-# factor()
-
-# levels()
-
-# summary()
-
-# coersion
-
-# subsetting
-
-# droplevels
-
-# changing levels (labels)
-
-# re-ordering
-
-```
-
-PRACTICE: #3, #4, #5
-
-## Data manipulation excursion
-### Creating (simple) new columns
-
-```{r}
-# single value
-
-# using subsetting
-
-```
-
-### Using xtabs() to check coding/cross-tabs
-
-```{r}
-
-```
-
-# NAs, NULLs
-
-## NAs
-  - missing data
-  - can be a huge pain
-  - hugely important to handle properly!
-  - no universal "handle NAs" or "ignore NAs" argument
-  - sometimes `na.rm = TRUE` (like for `mean()`)
-  - sometimes it's other stuff
-  - `cor()` use = "pairwise.complete.obs"
-  - no universal "deal with NAs" argument
-  
-```{r}
-x <- c(1, 2, NA, 4, 68)
-mean(x)
-mean(x, na.rm = TRUE)
-y <- c(NA, 4, 23, 2, 6)
-
-cor(x, y)
-cor(x, y, use = "complete.obs")
-x.1 <- c(2, 4, 68)
-y.1 <- c(4, 2, 6)
-cor(x.1, y.1)
-
-x == NA
-is.na(x)
-!is.na(x)
-
-```
-
-## NULL
-  - another special value
-  - means "nothing" or "doesn't exist" (contrast with "missing" or "unknown")
-
-```{r}
-
-```
-
-## Inf, -Inf, NaN
-  - can sometimes result from mathematical operations
-  - helpful to be able to identify, locate them
-
-```{r}
-x <- 1/0
-y <- -1/0
-z <- sqrt(-4)
-x
-y
-z
-
-is.finite(x)
-is.finite(y)
-is.finite(z)
-is.finite(NA)
-
-is.infinite(x)
-is.infinite(y)
-is.infinite(z)
-is.infinite(NA)
-
-is.nan(x)
-is.nan(y)
-is.nan(z)
-is.nan(NA)
-
-is.na(x)
-is.na(y)
-is.na(z) # surprising to me
-is.na(NA)
-
-```
-
-## Generic functions
-```{r}
-scottdata <- read.csv("scottdata/CognitionPaperModifiedData.csv")
-summary(scottdata)
-summary(scottdata$Corpus)
-example.lm <- lm(HiSegType ~ LoSegType, data = scottdata)
-summary(example.lm)
-class(scottdata)
-class(scottdata$Corpus)
-class(example.lm)
-
-```
-
-# Data types, classes, & coersion
-
-```{r}
-# typeof()
-
-# class()
-
-```
-
-`is.X` family of functions (`is.factor()`, `is.na()`, `is.finite()`, etc.)
-`as.X` family of functions (`as.factor()`, `as.numeric()`, `as.data.frame()`, etc.)
-
-# Lists
-  - similar to vectors
-  - can contain different data types
-  - use [[ ]] to pull out values
-  - handy for glomming large/complex objects together
-  - data frames are special lists!
-  
-```{r}
-
-```
-
-# Creating data frames
-  - handy, especially for making "look-up tables"
-  
-```{r}
-# data.frame()
-
-```
-
-# Combining data sets
-
-## Combining data frame objects
-### `rbind()` and `cbind()`
-  - rbind
-    - glues rows on top of each other
-    - expects same columns
-    - new and improved `bind_rows()` in `dplyr` package
-  - cbind
-    - glues columns next to each other
-    - need to be the same length    
-```{r}
-
-```
-
-### `merge()` and `*_join()` from `dplyr` package
-```{r}
-
-```
-    - simplest: have ONE column in common, named the same thing (with the same values)
-    - can get MUCH more complex
-    - `nrow()` good check on what was gained/lost during a merge
-    - "join" functions in `dplyr`
-      - `inner_join()` is like all = FALSE
-      - `full_join()` is like all = TRUE
-      - `left_join()`, `right_join()`, etc.
-      - see ?join for more details
