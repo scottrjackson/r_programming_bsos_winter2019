@@ -1,0 +1,112 @@
+---
+title: "Day 3 Practice"
+output: html_document
+---
+
+0. Make a "copy" of the `iris` data set in your workspace.
+
+```{r}
+myris <- iris
+```
+
+1. Create a new data frame that is the subset of rows where Sepal Length is equal to or greater than 3.3.  
+
+```{r}
+
+```
+
+2. Create a new data frame that is the subset of rows equal to or less than the median value of Petal Width.
+
+```{r}
+
+```
+
+3. Use `sample()` to "scramble" the data set. HINT: think about how to create a vector of numbers that represents a new ordering of the current rows.
+
+```{r}
+
+```
+
+4. Using `summary()`, identify a factor in the iris data
+
+```{r}
+
+```
+
+5. Use subsetting to create a data frame of just the virginica species, then re-run `summary()` to check. Then "clean up" the Species factor so that it only has one level. Show how this works for both the original and the "scrambled" data frame.
+
+```{r}
+
+```
+
+6. In the full data set (your copy), create different versions of the Species column:
+   a. a numeric vector
+   b. a character vector
+   
+```{r}
+
+```
+
+7. Use `xtabs()` to see how the values in these new columns line up with the original factor column.
+
+```{r}
+
+```
+
+8. Create another column that is a copy of the factor column. Now, recode this new column so that the factor levels have new names. 
+
+```{r}
+
+```
+
+9. Check the order of levels of Species with `levels()`. Create a new column from this factor, changing the order of the levels, using:
+  a. `relevel()`
+  b. `reorder()`
+  c. `factor()`
+
+```{r}
+
+```
+
+10. Explore coersion! Try to make a series of vectors with combinations from each of these data types:
+  - numeric
+  - character
+  - factor
+  - logical
+
+For each combination, see what happens, by using `typeof()`, `class()` and `print()` before and after.
+
+```{r}
+
+```
+
+11. Make a new data frame from scratch, with the following structure:
+  - a numeric "ID" column that goes from 1 to 20, repeating twice (HINT: see `?seq`)
+  - a factor "treatment" column that is "a" or "b", such that each ID matches up with both "a" and "b" once each
+  - a numeric "outcome" variable that is a normally distributed variable, such that the outcomes for "b" are 1 unit higher on average 
+
+```{r}
+
+```
+
+12. Now turn your ID column into a factor in the following way:
+  - append "s" at the beginning of each number
+  - convert into a factor
+  - check the order of levels. Do you care? How might you change the order?
+
+```{r}
+
+```
+
+13. Now change the "treatment" factor to replace "a" with "old practice" and "b" with "new technique". Do this carefully by first creating a new column that is a straight copy of the "treatment" column, then modifying that new column, then (using `xtabs()`) confirm that your new coding matches up with the old one.
+
+```{r}
+
+```
+
+14. Now add a new column that just picks out "extreme values", aka values of "outcome" that are > the 90th percentile
+
+```{r}
+
+```
+

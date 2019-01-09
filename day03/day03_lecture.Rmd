@@ -1,0 +1,407 @@
+---
+title: "Day 3 Lecture"
+output: html_document
+---
+
+# Review Day 2 Practice & Homework
+
+# Questions?
+
+# R Markdown vs. scripts
+Sweave: the original "reproducible document", mix of LaTeX and R
+
+R Markdown: one of the "cutting edge" formats, especially well-integrated into RStudio, that allows mixing of R code with text, document formatting, links, graphics, etc.
+
+The following is a code chunk, and when `knitr()` is run on this document, it will display both the code and the output.
+
+```{r}
+x <- rnorm(10000)
+hist(x)  # this is a histogram
+
+t.test(x)
+```
+
+You can also insert "inline" results, like the following:
+
+The mean of `x` is `r mean(x)`.
+
+More documentation on Markdown and R Markdown:
+  Help > Markdown Quick Reference
+  Help > RStudio Docs
+
+# Environments and `save()`/`load()`
+  - the basic R "workspace" is the Global Environment
+    - aka `.GlobalEnv`
+  - "save workspace image?" question
+    - recommend: no
+      - not reproducible
+      - helps perpetuate "bad programming hygiene"
+    - ends up in .RData file (no name in front of .RData)
+  - *BEST PRACTICE*: 
+    - save code in script/notebook
+    - save data in (non-proprietary) simple formats (CSV, etc.)
+    - helps transparency, reproducibility, portability
+  - HOWEVER:
+    - sometimes the result of an R function has non-trivial overhead (time)
+    - *for convenience*, it can be handy to save R objects in a "native" format
+    - `save()` then later `load()`
+
+```{r}
+x <- rnorm(100, mean = 0, sd = 2)
+y <- rnorm(100, mean = 1, sd = 1)
+ttest.results <- t.test(x, y)
+ttest.results
+
+# what if ttest.results took minutes/hours to compute?
+save(ttest.results, file = "big important object.RData")
+ttest.results
+rm(ttest.results)
+ttest.results
+load("big important object.RData")
+ttest.results
+
+save.image() # saves the *entire* workspace in .RData
+save.image(file = "workspace.RData") # allows you to specify a name for the file
+                                     # not loaded by default
+```
+
+# Reading and writing data/files
+## Basic concepts:
+  - not "opening" files, but rather:
+    - "reading" means "pulling data from a file into the workspace"
+    - "writing" means "writing data from the workspace into a file"
+  - approach:
+    1. Read data from whatever sources you need (from local files, from internet, whatever)
+    2. Work with data in R (workspace)
+    3. Write out whatever files you want to
+       - updated/cleaned data
+       - table of results/coefficients
+       - plots
+       - whatever you want! (and can program)
+
+## Weird file types
+Package for reading Excel data:
+  `readxl`
+
+  - makes it easier to deal with Excel (esp .xslx files) without needing to export to CSV
+
+Package for other stats packages (SPSS, SAS, Stata):
+  `haven`
+
+"Tidyverse" package for reading various kinds of data:
+  `readr`
+
+## Look at the options!
+```{r eval=FALSE}
+?read.table
+
+mydata <- read.csv(filename, na.strings = c("NA", "N/A", "n/a", " ", "nuthin"))
+
+?readLines
+?scan
+```
+
+## Writing files
+
+```{r eval=FALSE}
+?write.table # .csv, etc.
+```
+
+Gotcha:
+  - rownames!
+  
+```{r eval=FALSE}
+write.table(mydata, file = "outputfile.txt", 
+            sep = "\t",   # this makes the output tab-delimited
+            row.names = FALSE)  # good for exporting data
+
+write.csv(mydata, file = "outputfile.csv", row.names = FALSE) # good for writing CSVs
+```
+
+# Data types
+   - numeric
+   - logical
+   - character
+   - factor
+   - NA
+   - NULL
+   - others (e.g, "Date")
+
+## Numeric
+  - numbers!
+  - sometimes integers can differ from non-integers
+  - `as.numeric()` forces it to be a number (not integers)
+  - `1L` is an integer
+  - have mean, medians
+
+A few handy things with numbers:
+
+```{r}
+# floating point pitfalls
+
+# "e" notation for really big numbers
+1e4
+
+# round(), floor(), ceiling()
+
+# sample(), rnorm(), rbinom()
+
+# the r/p/d families
+
+# quantile()
+
+```
+
+
+## Logicals
+  - TRUE and FALSE
+  - if coerced to `as.numeric`, TRUE == 1, FALSE == 0
+    - can take the mean of a logical vector
+  - Shortcuts: T and F
+    - *DANGER*: T and F can be overwritten
+  - logical operators create logical vectors
+    - `==`
+    - `>`
+    - `<`
+    - `|`  This is the "long bar", meaning (inclusive) "or" (aka "pipe")
+    - `&`  == "and"
+    - `>=`  greater or equal
+    - `!`  is NOT
+    - `&&` and `||`  for more specific programming situations
+    
+```{r}
+# basic forms
+
+# "shortcut" forms (avoid!)
+
+# examples of comparisons
+
+# which()
+
+# logicals for subsetting
+
+# %in%
+
+```
+
+PRACTICE!  #0 -- #2 in the "day03_practice.Rmd" file
+
+Try "knitting" the result!
+
+## Characters
+  - `as.character()` converts to characters
+  - more primitive than factors
+  - can manipulate with regular expressions, other text functions
+
+Some handy text stuff
+
+```{r}
+# cat(), print()
+
+# special characters: \t, \n, "escaping"
+
+# nchar()
+
+# paste(), strsplit()
+
+# stringr package
+
+# grep(), grepl(), gsub()
+
+```
+
+## Factors
+  - Actually numbers under the hood
+  - Act like numbers + labels
+  - VERY useful for many kinds of analyses
+  - if a column is a *property* of data (not a measure itself), factors are usually best
+    - groupings = good as factors
+    - conditions = good as factors
+  - if a column is *data*, maybe consider keeping it a string
+    - free response answers = bad as factors
+  - `as.factor()` coerces to a factor
+  - `factor()` creates a factor
+  - factors have *levels*: categories
+  - `stringsAsFactors` : option for how to read in character vectors
+    - = FALSE if you don't want to read in characters as factors
+
+```{r}
+# factor()
+
+# levels()
+
+# summary()
+
+# coersion
+
+# subsetting
+
+# droplevels
+
+# changing levels (labels)
+
+# re-ordering
+
+```
+
+PRACTICE: #3, #4, #5
+
+## Data manipulation excursion
+### Creating (simple) new columns
+
+```{r}
+# single value
+
+# using subsetting
+
+```
+
+### Using xtabs() to check coding/cross-tabs
+
+```{r}
+
+```
+
+# NAs, NULLs
+
+## NAs
+  - missing data
+  - can be a huge pain
+  - hugely important to handle properly!
+  - no universal "handle NAs" or "ignore NAs" argument
+  - sometimes `na.rm = TRUE` (like for `mean()`)
+  - sometimes it's other stuff
+  - `cor()` use = "pairwise.complete.obs"
+  - no universal "deal with NAs" argument
+  
+```{r}
+x <- c(1, 2, NA, 4, 68)
+mean(x)
+mean(x, na.rm = TRUE)
+y <- c(NA, 4, 23, 2, 6)
+
+cor(x, y)
+cor(x, y, use = "complete.obs")
+x.1 <- c(2, 4, 68)
+y.1 <- c(4, 2, 6)
+cor(x.1, y.1)
+
+x == NA
+is.na(x)
+!is.na(x)
+
+```
+
+## NULL
+  - another special value
+  - means "nothing" or "doesn't exist" (contrast with "missing" or "unknown")
+
+```{r}
+
+```
+
+## Inf, -Inf, NaN
+  - can sometimes result from mathematical operations
+  - helpful to be able to identify, locate them
+
+```{r}
+x <- 1/0
+y <- -1/0
+z <- sqrt(-4)
+x
+y
+z
+
+is.finite(x)
+is.finite(y)
+is.finite(z)
+is.finite(NA)
+
+is.infinite(x)
+is.infinite(y)
+is.infinite(z)
+is.infinite(NA)
+
+is.nan(x)
+is.nan(y)
+is.nan(z)
+is.nan(NA)
+
+is.na(x)
+is.na(y)
+is.na(z) # surprising to me
+is.na(NA)
+
+```
+
+## Generic functions
+```{r}
+scottdata <- read.csv("scottdata/CognitionPaperModifiedData.csv")
+summary(scottdata)
+summary(scottdata$Corpus)
+example.lm <- lm(HiSegType ~ LoSegType, data = scottdata)
+summary(example.lm)
+class(scottdata)
+class(scottdata$Corpus)
+class(example.lm)
+
+```
+
+# Data types, classes, & coersion
+
+```{r}
+# typeof()
+
+# class()
+
+```
+
+`is.X` family of functions (`is.factor()`, `is.na()`, `is.finite()`, etc.)
+`as.X` family of functions (`as.factor()`, `as.numeric()`, `as.data.frame()`, etc.)
+
+# Lists
+  - similar to vectors
+  - can contain different data types
+  - use [[ ]] to pull out values
+  - handy for glomming large/complex objects together
+  - data frames are special lists!
+  
+```{r}
+
+```
+
+# Creating data frames
+  - handy, especially for making "look-up tables"
+  
+```{r}
+# data.frame()
+
+```
+
+# Combining data sets
+
+## Combining data frame objects
+### `rbind()` and `cbind()`
+  - rbind
+    - glues rows on top of each other
+    - expects same columns
+    - new and improved `bind_rows()` in `dplyr` package
+  - cbind
+    - glues columns next to each other
+    - need to be the same length    
+```{r}
+
+```
+
+### `merge()` and `*_join()` from `dplyr` package
+```{r}
+
+```
+    - simplest: have ONE column in common, named the same thing (with the same values)
+    - can get MUCH more complex
+    - `nrow()` good check on what was gained/lost during a merge
+    - "join" functions in `dplyr`
+      - `inner_join()` is like all = FALSE
+      - `full_join()` is like all = TRUE
+      - `left_join()`, `right_join()`, etc.
+      - see ?join for more details

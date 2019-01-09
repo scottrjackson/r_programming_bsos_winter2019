@@ -1,0 +1,40 @@
+---
+title: "Day 3 Homework"
+output: html_document
+---
+
+1. Identify a column in your data that *should* be a factor (whether it is or not). Check to see whether R is already treating it as a factor, and if not, convert it into a factor.
+
+```{r}
+
+```
+
+2. What are the levels of the factor? How many occurrences of each level are there in the data?
+   
+```{r}
+
+```
+
+3. Create a new column that is a numeric "version" of the factor column, using `as.numeric()`. Use `xtabs()` to see how the values of these columns line up.
+
+```{r}
+
+```
+
+4. Create another column that is a copy of the factor column. Now, recode this new column so that the factor levels have new names. 
+  (e.g., if you have a factor with levels "A" and "B", you could make a new column that had "condition A" and "condition B" as the level names instead)
+
+```{r}
+
+```
+
+5. Change the order of the levels in your new factor, using three different methods:
+  a. `relevel()`
+  b. `reorder()`
+  c. `factor()`
+
+```{r}
+
+```
+
+
