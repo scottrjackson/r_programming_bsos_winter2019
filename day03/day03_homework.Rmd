@@ -6,18 +6,37 @@ output: html_document
 1. Identify a numeric column in your data. Find the 95th %ile value of that column.
 
 ```{r}
+scottdata <- read.csv("scottdata/CognitionPaperFinalData.csv")
+summary(scottdata)
 
+minpairs95th <- quantile(scottdata$AllMinPairs, .95)
+minpairs95th
 ```
 
 2. Subset your data to be only include values greater than that extreme 95th %ile
 
 ```{r}
+scottdata.extremehigh <- scottdata[scottdata$AllMinPairs >= minpairs95th, ]
 
+nrow(scottdata.extremehigh)/nrow(scottdata)
 ```
 
 3. Now find the lowest 5th %ile, and subset to the data that includes both the lower extremes and upper extremes
 
 ```{r}
+minpairs5th <- quantile(scottdata$AllMinPairs, .05)
+minpairs5th
+length(which(scottdata$AllMinPairs == minpairs5th))
+length(which(scottdata$AllMinPairs == minpairs5th))/nrow(scottdata)
+
+scottdata.extremevalues <- scottdata[scottdata$AllMinPairs >= minpairs95th |
+                                       scottdata$AllMinPairs <= minpairs5th, ]
+summary(scottdata.extremevalues)
+
+# changing logicals to get the converse data set
+scottdata.noextremes <- scottdata[scottdata$AllMinPairs < minpairs95th &
+                                    scottdata$AllMinPairs > minpairs5th, ]
+summary(scottdata.noextremes)
 
 ```
 
