@@ -9,6 +9,7 @@ output: html_document
 scottdata <- read.csv("scottdata/CognitionPaperFinalData.csv")
 summary(scottdata)
 
+
 minpairs95th <- quantile(scottdata$AllMinPairs, .95)
 minpairs95th
 ```
@@ -28,9 +29,11 @@ minpairs5th <- quantile(scottdata$AllMinPairs, .05)
 minpairs5th
 length(which(scottdata$AllMinPairs == minpairs5th))
 length(which(scottdata$AllMinPairs == minpairs5th))/nrow(scottdata)
+length(which(scottdata$AllMinPairs == minpairs5th))/length(scottdata$AllMinPairs)
 
-scottdata.extremevalues <- scottdata[scottdata$AllMinPairs >= minpairs95th |
-                                       scottdata$AllMinPairs <= minpairs5th, ]
+scottdata.extremevalues <- 
+  scottdata[scottdata$AllMinPairs >= minpairs95th |
+               scottdata$AllMinPairs <= minpairs5th, ]
 summary(scottdata.extremevalues)
 
 # changing logicals to get the converse data set

@@ -67,10 +67,4 @@ output: html_document
     - split up your data into chunks
     - make up some new table of information that you want to merge in
   - Explain (in words) what you are trying to do
-  - Use binding/merging commands to accomplish this
-  - Complete at least ONE example of binding and ONE example of merging
 
-```{r}
-
-
-```

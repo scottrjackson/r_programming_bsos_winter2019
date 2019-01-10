@@ -29,17 +29,93 @@ output: html_document
 Some handy text stuff
 
 ```{r}
+# quotes
+
+x <- "a string"
+x
+y <- 'also a string'
+y
+z <- "this is a 'string' too"
+z
+w <- 'this thing is also a "string"'
+w
+# w.wrong <- "this thing is also a ""string""
+
 # cat(), print()
+print(x)
+cat(x)
+
+cat(x, file = "cat_example.txt")
+
+sample.ttest <- t.test(rnorm(20, 0, 1), rnorm(20, 2, 1))
+sample.ttest
+print(sample.ttest)
+printed.ttest <- print(sample.ttest)
 
 # special characters: \t, \n, "escaping"
+x <- "here's a cool result: 10"
+cat(x)
+y <- "here's a cool result:\t10"
+cat(y)
+z <- "here's a cool result:\n\n\t\t\t10"
+cat(z)
+
+cat("some\ntext")
+cat("some\\ntext")
+cat("some\"text")
 
 # nchar()
+nchar("hello")
+length("hello")
 
 # paste(), strsplit()
+paste("hello", "there")
+?paste
+
+paste("hello", "there", sep = "")
+x <- c("here", "are", "some", "strings")
+x
+
+paste("prefix", x, sep = "")
+
+paste(x, collapse = " ")
+
+x
+y <- paste(x, "suffix", sep = "_")
+y
+
+strsplit(y, split = "_")
+
+z <- paste(x, "suffix", sep = ".")
+z
+
+strsplit(z, split = ".")
+
+strsplit(z, split = "\\.")
 
 # stringr package
 
 # grep(), grepl(), gsub()
+x
+grep("here", x)
+grep("e", x)
+
+grepl("here", x)
+
+gsub("e", "E", x)
+gsub("e", "", x)
+
+longer.thing <- c("10F5657", "59J4957", "30K16238")
+gsub("\\d+\\w(\\d+)", "\\1", longer.thing)
+
+gsub("(\\d+)(\\w)(\\d+)", "\\2", longer.thing)
+longer.thing2 <- c("10F5657ggjgjjg", "59J4957sfs", "30K16238eee")
+gsub("(\\d+)(\\w)(\\d+)", "\\2", longer.thing2)
+
+gsub("(\\d+)(\\w)(\\d+)", "\\1 \\3", longer.thing)
+?regex
+
+
 
 ```
 
@@ -60,20 +136,77 @@ Some handy text stuff
 
 ```{r}
 # factor()
+x <- c(rep("a", 20), rep("b", 20), rep("c", 20))
+x
+summary(x)
+x.factor <- factor(x)
+summary(x.factor)
 
 # levels()
+levels(x.factor)
 
 # summary()
 
-# coersion
-
 # subsetting
+sleep
+mysleep <- sleep
+summary(mysleep)
+class(mysleep$group)
+
+levels(mysleep$group)
+
+mysleep.group1 <- mysleep[mysleep$group == "1", ]
+summary(mysleep.group1)
 
 # droplevels
+mysleep.group1 <- droplevels(mysleep.group1)
+summary(mysleep.group1)
 
 # changing levels (labels)
+mysleep <- sleep
+levels(mysleep$group)
+
+levels(mysleep$group) <- c("pre", "post")
+levels(mysleep$group)
+summary(mysleep)
+head(mysleep)
+
+mysleep.bad <- sleep
+levels(mysleep.bad$group) <- c("2", "1")
+summary(mysleep.bad)
+
+mysleep.badgroup1 <- mysleep.bad[mysleep$group == "1", ]
+summary(mysleep.badgroup1)
+
+mysleep.badgroup1.wtf <- mysleep.bad[mysleep$group == 1, ]
+summary(mysleep.badgroup1.wtf) # Scott was surprised this worked!
+
+summary(mysleep.badgroup1$group)
+as.numeric(mysleep.badgroup1$group)
+as.numeric(as.character(mysleep.badgroup1$group))
+
+colnames(mysleep)
+
+colnames(mysleep) <- c("extra sleep", "treatment group", "subject")
+head(mysleep)
 
 # re-ordering
+mysleep <- sleep
+levels(mysleep$group) <- c("pre", "post")
+summary(mysleep)
+# levels(mysleep$group) <- c("post", "pre") # CHANGES DATA, NOT ORDER OF LEVELS)
+# levels(mysleep$group)
+mysleep$group2 <- mysleep$group
+head(mysleep)
+mysleep$group2 <- factor(mysleep$group2, levels = c("post", "pre"))
+summary(mysleep)
+head(mysleep)
+mysleep$group2 <- factor(mysleep$group2, levels = c("post", "pre"))
+mysleep$group2 <- factor(mysleep$group2, levels = c("post", "pre", "delayed post"))
+summary(mysleep)
+# mysleep$group2 <- factor(mysleep$group2, levels = c("pos", "pre", "delayed post"))
+# summary(mysleep)
+
 
 ```
 
@@ -82,14 +215,32 @@ Some handy text stuff
 
 ```{r}
 # single value
+mysleep$experiment <- 1
 
+mysleep$group3 <- mysleep$group
 # using subsetting
+summary(mysleep)
+
+# ifelse()
+mysleep$sleeplevel <- ifelse(mysleep$extra >= 1, "high", "low")
+mysleep$sleeplevel <- ifelse(mysleep$extra >= 1, "high", 
+                             ifelse(mysleep$extra < 1, "low", NA))
+summary(mysleep)
+mysleep$sleeplevel <- as.factor(ifelse(mysleep$extra >= 1, "high", "low"))
+summary(mysleep)
+mysleep$sleeplevel <- factor(ifelse(mysleep$extra >= 1, "high", "low"), levels = c("low", "high"))
+
+summary(mysleep)
 
 ```
 
 ## Using xtabs() to check coding/cross-tabs
 
 ```{r}
+xtabs(~ group + group2, data = mysleep)
+xtabs(~ sleeplevel + extra, data = mysleep)
+xtabs(~ extra + sleeplevel, data = mysleep)
+xtabs(~ extra + sleeplevel + group, data = mysleep)
 
 ```
 
@@ -124,6 +275,12 @@ Some handy text stuff
   - helpful to be able to identify, locate them
 
 ```{r}
+x <- 1/0
+x
+y <- -1/0
+y
+z <- sqrt(-4)
+z
 
 ```
 

@@ -18,13 +18,23 @@ summary(my.iris.scrambled)
 1. Using `summary()`, identify a factor in the iris data
 
 ```{r}
+summary(my.iris)
+class(my.iris$Species)
 
 ```
+
+Species is a factor. The summary gives counts at the different levels, which looks like a factor, and I can confirm that with `class()`
 
 2. Use subsetting (with logicals) to create a data frame of just the virginica species, then re-run `summary()` to check. Then "clean up" the Species factor so that it only has one level. Show how this works for both the original and the "scrambled" data frame.
 
 ```{r}
+virginicas <- my.iris[my.iris$Species %in% "virginica", ]
+summary(virginicas)
+virginicas <- droplevels(virginicas)
+summary(virginicas)
 
+virginicas.scrambled <- droplevels(my.iris.scrambled[my.iris.scrambled$Species %in% "virginica", ])
+summary(virginicas.scrambled)
 ```
 
 3. In the full data set (your copy), create different versions of the Species column:
@@ -32,19 +42,23 @@ summary(my.iris.scrambled)
    b. a character vector
    
 ```{r}
-
+my.iris$SpeciesNum <- as.numeric(my.iris$Species)
+my.iris$SpeciesChar <- as.character(my.iris$Species)
 ```
 
 4. Use `xtabs()` to see how the values in these new columns line up with the original factor column.
 
 ```{r}
-
+xtabs(~ Species + SpeciesNum, my.iris)
+xtabs(~ Species + SpeciesChar, my.iris)
 ```
 
 5. Create another column that is a copy of the factor column. Now, recode this new column so that the factor levels have new names. 
 
 ```{r}
-
+my.iris$Species2 <- my.iris$Species
+levels(my.iris$Species2) <- c("SETO", "VERS", "VIRG")
+xtabs(~ Species + Species2, my.iris)
 ```
 
 6. Check the order of levels of Species with `levels()`. Create a new column from this factor, changing the order of the levels, using:
@@ -53,6 +67,20 @@ summary(my.iris.scrambled)
   c. `factor()`
 
 ```{r}
+my.iris$Species3 <- relevel(my.iris$Species, "versicolor")
+levels(my.iris$Species3)
+xtabs(~ Species + Species3, my.iris)
+
+my.iris$SpeciesNewNum <- ifelse(my.iris$Species %in% "setosa", 3, 
+                                ifelse(my.iris$Species %in% "versicolor", 1,
+                                       ifelse(my.iris$Species %in% "virginica", 2, NA)))
+my.iris$Species4 <- reorder(my.iris$Species, my.iris$SpeciesNewNum)
+levels(my.iris$Species4)
+xtabs(~ Species + Species4, my.iris)
+
+my.iris$Species5 <- factor(my.iris$Species, levels = c("virginica", "setosa", "versicolor"))
+levels(my.iris$Species5)
+xtabs(~ Species + Species5, my.iris)
 
 ```
 
@@ -65,78 +93,33 @@ summary(my.iris.scrambled)
 For each combination, see what happens, by using `typeof()`, `class()` and `print()` before and after.
 
 ```{r}
+c(FALSE, TRUE, 3)
+class(c(FALSE, TRUE, 3))
 
-```
+c(FALSE, TRUE, "three")
+class(c(FALSE, TRUE, "three"))
 
-8. Make a new data frame from scratch, with the following structure:
-  - a numeric "ID" column that goes from 1 to 20, repeating twice (HINT: see `?seq`)
-  - a factor "treatment" column that is "a" or "b", such that each ID matches up with both "a" and "b" once each
-  - a numeric "outcome" variable that is a normally distributed variable, such that the outcomes for "b" are 1 unit higher on average 
+c("1", 2, 3)
+class(c("1", 2, 3))
 
-```{r}
+class(as.factor("one"))
+c(as.factor("one"), 2, 33)
+class(c(as.factor("one"), 2, 33))
 
-```
+c(as.factor("one"), "two", "three")
+class(c(as.factor("one"), "two", "three"))
 
-9. Now turn your ID column into a factor in the following way:
-  - append "s" at the beginning of each number
-  - convert into a factor
-  - check the order of levels. Do you care? How might you change the order?
+c(as.factor("one"), FALSE)
+class(c(as.factor("one"), FALSE))
 
-```{r}
+x <- as.factor(c("false", "true"))
+x
+class(x)
+c(x, FALSE, TRUE)
+class(c(x, FALSE, TRUE))
 
-```
-
-10. Now change the "treatment" factor to replace "a" with "old practice" and "b" with "new technique". Do this carefully by first creating a new column that is a straight copy of the "treatment" column, then modifying that new column, then (using `xtabs()`) confirm that your new coding matches up with the old one.
-
-```{r}
-
-```
-
-11. Now add a new column that just picks out "extreme values", aka values of "outcome" that are > the 90th percentile
-
-```{r}
-
-```
-
-12. Make a copy of the `iris` data frame
-  - Using `sample()` pull the data apart into two random batches
-  - Put the pieces back together with `rbind()`
-  - Put the pieces back together with `bind_rows()` from the `dplyr` package, creating an ID that keeps track of which piece is which
-  
-  
-```{r}
-
-
-```
-
-13. Make a copy of the `iris` data frame
-  - using [ , ] notation, pull the data frame into two sets of different columns
-  - Put the pieces back together with `cbind()`
-  - Put the pieces back together with `bind_cols()` from the `dplyr` package
-
-```{r}
-
-
-```
-
-14. Run the following code to create a new small data frame with some additional information about iris species
-
-```{r}
-iris.info <- data.frame(Plant = c("setosa", "virginica", "limniris"),
-                        State = c("Alaska", "Tennessee", "Louisiana"),
-                        Rating = c(1, 5, 15))
-```
-
-Now merge this information with the `iris` data to create a new data frame. Using the `merge()` function, experiment with all = TRUE and all = FALSE. Also experiment with the `dplyr` join functions:
-  - `inner_join()`
-  - `full_join()`
-  - `left_join()`
-  - `right_join()`
-  - `semi_join()`
-  - `anti_join()`
-  
-```{r}
-
+c("false", "true", FALSE, TRUE)
+class(c("false", "true", FALSE, TRUE))
 
 ```
 
