@@ -1,0 +1,142 @@
+---
+title: "Day 4 Practice"
+output: html_document
+---
+
+0. Make a copy of the `iris` data set.  Use `sample()` to make an additional "scrambled" version of the data set. 
+
+```{r}
+my.iris <- iris
+my.iris.scrambled <- my.iris[sample(nrow(my.iris)), ]
+head(my.iris)
+head(my.iris.scrambled)
+summary(my.iris)
+summary(my.iris.scrambled)
+
+```
+
+1. Using `summary()`, identify a factor in the iris data
+
+```{r}
+
+```
+
+2. Use subsetting (with logicals) to create a data frame of just the virginica species, then re-run `summary()` to check. Then "clean up" the Species factor so that it only has one level. Show how this works for both the original and the "scrambled" data frame.
+
+```{r}
+
+```
+
+3. In the full data set (your copy), create different versions of the Species column:
+   a. a numeric vector
+   b. a character vector
+   
+```{r}
+
+```
+
+4. Use `xtabs()` to see how the values in these new columns line up with the original factor column.
+
+```{r}
+
+```
+
+5. Create another column that is a copy of the factor column. Now, recode this new column so that the factor levels have new names. 
+
+```{r}
+
+```
+
+6. Check the order of levels of Species with `levels()`. Create a new column from this factor, changing the order of the levels, using:
+  a. `relevel()`
+  b. `reorder()`
+  c. `factor()`
+
+```{r}
+
+```
+
+7. Explore coersion! Try to make a series of vectors with combinations from each of these data types:
+  - numeric
+  - character
+  - factor
+  - logical
+
+For each combination, see what happens, by using `typeof()`, `class()` and `print()` before and after.
+
+```{r}
+
+```
+
+8. Make a new data frame from scratch, with the following structure:
+  - a numeric "ID" column that goes from 1 to 20, repeating twice (HINT: see `?seq`)
+  - a factor "treatment" column that is "a" or "b", such that each ID matches up with both "a" and "b" once each
+  - a numeric "outcome" variable that is a normally distributed variable, such that the outcomes for "b" are 1 unit higher on average 
+
+```{r}
+
+```
+
+9. Now turn your ID column into a factor in the following way:
+  - append "s" at the beginning of each number
+  - convert into a factor
+  - check the order of levels. Do you care? How might you change the order?
+
+```{r}
+
+```
+
+10. Now change the "treatment" factor to replace "a" with "old practice" and "b" with "new technique". Do this carefully by first creating a new column that is a straight copy of the "treatment" column, then modifying that new column, then (using `xtabs()`) confirm that your new coding matches up with the old one.
+
+```{r}
+
+```
+
+11. Now add a new column that just picks out "extreme values", aka values of "outcome" that are > the 90th percentile
+
+```{r}
+
+```
+
+12. Make a copy of the `iris` data frame
+  - Using `sample()` pull the data apart into two random batches
+  - Put the pieces back together with `rbind()`
+  - Put the pieces back together with `bind_rows()` from the `dplyr` package, creating an ID that keeps track of which piece is which
+  
+  
+```{r}
+
+
+```
+
+13. Make a copy of the `iris` data frame
+  - using [ , ] notation, pull the data frame into two sets of different columns
+  - Put the pieces back together with `cbind()`
+  - Put the pieces back together with `bind_cols()` from the `dplyr` package
+
+```{r}
+
+
+```
+
+14. Run the following code to create a new small data frame with some additional information about iris species
+
+```{r}
+iris.info <- data.frame(Plant = c("setosa", "virginica", "limniris"),
+                        State = c("Alaska", "Tennessee", "Louisiana"),
+                        Rating = c(1, 5, 15))
+```
+
+Now merge this information with the `iris` data to create a new data frame. Using the `merge()` function, experiment with all = TRUE and all = FALSE. Also experiment with the `dplyr` join functions:
+  - `inner_join()`
+  - `full_join()`
+  - `left_join()`
+  - `right_join()`
+  - `semi_join()`
+  - `anti_join()`
+  
+```{r}
+
+
+```
+
