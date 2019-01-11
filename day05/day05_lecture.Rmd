@@ -5,6 +5,7 @@ output: html_document
 
 # Outline
   - Review Practice & Homework 4
+  - Packages and namespace conflicts
   - Lists
   - More on data frames
   - Simple transformations, "base" and "dplyr"
@@ -120,9 +121,7 @@ library(dplyr)
       - `left_join()`, `right_join()`, etc.
       - see ?join for more details
 
-
-
-# PRACTICE: #12 -- #14
+# PRACTICE
 
 # Intro to graphics
 
@@ -171,7 +170,7 @@ example("anscombe")
   - `ggplot2` is the overhauled version of the original implementation, and it is still under active development
   - the idea is to implement a general system for mapping data variables to *aesthetics* (Wilkinson's term), i.e., visual dimensions (x, y, color, etc.)
   - allows for high-level control of the structure of a plot, to allow for flexible, powerful visualizations
-  - the place for documentation: http://docs.ggplot2.org/current/
+  - the place for documentation: https://ggplot2.tidyverse.org/reference/
   - another good site: http://www.cookbook-r.com/Graphs/
   
 ## Basic structure and concepts
