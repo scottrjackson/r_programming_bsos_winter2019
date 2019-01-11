@@ -6,6 +6,7 @@ output: html_document
 # Outline
   - Review Practice & Homework 4
   - Packages and namespace conflicts
+  - Review NA & NULL
   - Lists
   - More on data frames
   - Simple transformations, "base" and "dplyr"
@@ -25,6 +26,13 @@ library(dplyr)
 # need to use MASS::select()
 
 ```
+
+# More on NA, NULL
+
+```{r}
+
+```
+
 
 # Lists
   - similar to vectors
