@@ -16,6 +16,24 @@ output: html_document
 
 # Review
 
+Couple of new handy functions
+
+```{r}
+# seq()
+seq(from = 1, to = 10, by = 1)
+1:10
+seq(from = 20, to = 2, by = -2)
+seq(from = 0, to = 1, by = 0.05)
+
+# rep()
+rep(1, 10)
+rep(1:3, 5)
+rep(1:3, each = 5)
+rep(1:3, 5, each = 2)
+
+```
+
+
 # Quick aside: package namespace conflicts
 
 ```{r}
@@ -25,11 +43,46 @@ library(dplyr)
 # select() from MASS is "masked"
 # need to use MASS::select()
 
+?MASS::select
+?dplyr::select # not necessary
+
+c <- 10
+c
+c(1, 2, 3) # R finds the function c
+
+c <- function(...) { print("gotcha!") }
+
+c(1, 2, 3)
+
+rm("c")
+
+c(1, 2, 3)
 ```
 
 # More on NA, NULL
 
 ```{r}
+
+x <- c(1, 2, 56, NA, 43)
+x
+mean(x)
+
+mysleep <- sleep
+mysleep$extra[sample(1:nrow(mysleep), 5, replace = FALSE)] <- NA
+summary(mysleep)
+
+mysleep[mysleep$extra == NA, ] # does something, but not what you might expect
+mysleep[is.na(mysleep$extra), ]
+mysleep[!is.na(mysleep$extra), ]
+
+?complete.cases
+mean(mysleep$extra)
+mean(mysleep$extra, na.rm = TRUE)
+mean(!is.na(mysleep$extra), na.rm = TRUE) # getting proportion of missingness
+?cor # read up on "use" argument
+
+# read functions can help label NAs
+# read.csv(..., na.strings = c("n/a", "", " ", "NA", "N/A"))
 
 ```
 
@@ -43,12 +96,55 @@ library(dplyr)
   
 ```{r}
 # list()
+x <- c(1, "two", FALSE)
+x
+y <- list(1, "two", FALSE)
+y
+x[1]
+
+y[1]
+class(y[1])
+y[[1]]
+class(y[[1]])
 
 # unlist()
+x <- "type_instance"
+strsplit(x, split = "_")
+unlist(strsplit(x, split = "_"))
 
 # names() and str()
+x  <- list(1, "two", FALSE)
+names(x)
+names(x) <- c("first", "second", "third")
+names(x)
+x
+x[[2]]
+x[["second"]]
+x["second"]
+class(x)
+x$second
 
 # pulling apart t-test object
+mytest <- t.test(rnorm(20, 1), rnorm(20, 2))
+mytest
+class(mytest)
+names(mytest)
+str(mytest)
+
+mytest$p.value
+mytest[["p.value"]]
+
+# S3 vs S4 classes
+
+# data frame are also just fancy lists
+mysleep <- sleep
+nrow(mysleep)
+length(mysleep)
+mysleep$extra
+
+mysleep[["extra"]]
+mysleep[ ,"extra"]
+mysleep["extra"]
 
 ```
 
@@ -57,26 +153,48 @@ library(dplyr)
   
 ```{r}
 # data.frame()
+mydf <- data.frame(var1 = rnorm(20, 0, 1),
+                   var2 = rnorm(20, 0, 2),
+                   missing = NA,
+                   condition = rep(c("A", "B"), each = 2))
 
+mydf
+summary(mydf)
 # stringsAsFactors argument
+mydf.nofactors <- data.frame(var1 = rnorm(20, 0, 1),
+                             var2 = rnorm(20, 0, 2),
+                             missing = NA,
+                             condition = rep(c("A", "B"), each = 2),
+                             stringsAsFactors = FALSE)
+summary(mydf.nofactors)
+
 
 ```
 
 # Intro to `dplyr`
 
 ```{r}
-
+library(dplyr)
 ```
 
 ## subsetting with `dplyr`
 
 ```{r}
+mysleep <- sleep
+mysleep.group2 <- mysleep[mysleep$ID %in% c("1", "4", "7"), ]
+mysleep.group1 <- mysleep[mysleep$group %in% "1", ]
+mysleep.group1
+mysleep.group1.dplyr <- filter(mysleep, group %in% "1")
+mysleep.group1.dplyr
+class(mysleep.group1)
+str(mysleep.group1.dplyr)
 
 ```
 
 ## "tibbles" and `as.data.frame()`
 
 ```{r}
+# as.data.frame()
 
 ```
 
@@ -85,23 +203,29 @@ library(dplyr)
 ## Creating new columns
 
 ```{r}
+mysleep <- sleep
+mysleep$extra2 <- mysleep$extra
+head(mysleep)
+
+# mutate() from dplyr
+mysleep <- mutate(mysleep, extra3 = extra)
+head(mysleep)
 
 ```
 
 ## Simple column transformations
 
 ```{r}
+mysleep <- sleep
+mysleep$doubleextra <- mysleep$extra * 2
+mysleep$logextra <- log(abs(mysleep$extra))
+head(mysleep)
 
+# dplyr uses mutate()
+mysleep <- mutate(mysleep, logextra2 = log(abs(extra)))
+head(mysleep)
 
 ```
-
-## `dplyr` style: `mutate()`
-
-```{r}
-
-```
-
-# PRACTICE
 
 # Combining data frame objects
 ## `rbind()` and `cbind()`
@@ -113,12 +237,53 @@ library(dplyr)
     - glues columns next to each other
     - need to be the same length    
 ```{r}
+mysleep <- sleep
+summary(mysleep)
+newsleep <- data.frame(extra = rnorm(4),
+                       group = rep(c("1", "2"), each = 2),
+                       ID = rep(c("11", "12"), 2))
+newsleep
+
+allsleep1 <- rbind(mysleep, newsleep)
+summary(allsleep1)
+summary(allsleep1$ID)
+newsleep2 <- data.frame(extra = rnorm(4),
+                       group = rep(c("1", "2"), each = 2),
+                       ID = rep(c("11", "12"), 2),
+                       gender = rep(c("M", "F"), 2))
+newsleep2
+
+allsleep2 <- rbind(mysleep, newsleep2)
+
+# dplyr has bind_rows()
+allsleep3 <- bind_rows(mysleep, newsleep2)
+summary(allsleep3)
+
 
 ```
 
 ## `merge()` from `base` R, and `*_join()` from `dplyr` package
 ```{r}
+mysleep <- sleep
+mysleep
+sleepages <- data.frame(ID = as.character(3:12), 
+                        age = sample(20:50, 10),
+                        gender = sample(c("M", "F", "X", NA), 10, replace = TRUE))
+sleepages
 
+sleep.merged <- merge(mysleep, sleepages) # all = FALSE
+sleep.merged
+
+sleep.merged2 <- merge(mysleep, sleepages, all = TRUE)
+sleep.merged2
+
+# dplyr way uses *_join
+sleep.inner <- inner_join(mysleep, sleepages, by = "ID")
+sleep.inner
+sleep.outer <- full_join(mysleep, sleepages, by = "ID")
+sleep.outer
+sleep.left <- left_join(mysleep, sleepages, by = "ID")
+sleep.left
 ```
     - simplest: have ONE column in common, named the same thing (with the same values)
     - can get MUCH more complex
@@ -194,37 +359,20 @@ example("anscombe")
 ```{r}
 library(ggplot2)
 ?starwars
-
+sw <- starwars
 # geom_histogram()
-
-# geom_density()
+ggplot(sw, aes(mass)) + geom_histogram()
 
 # geom_point()
+ggplot(sw, aes(mass, height)) + geom_point()
 
 # geom_text()
+ggplot(sw, aes(mass, height)) + geom_text(aes(label = name))
 
-# geom_boxplot()
+sw2 <- filter(sw, !grepl("Jabba", name))
 
-```
+ggplot(sw2, aes(mass, height)) + geom_point()
 
-## More on colors
-  - http://colorbrewer2.org/
-
-```{r}
-colors()
-?RGB
-
-# scale_color_brewer()
+ggplot(sw2, aes(mass, height)) + geom_point(aes(color = gender))
 
 ```
-
-### Saving plots
-
-```{r}
-?Devices
-
-```
-
-TIP: look into other PDF readers (not Adobe) if you want to leave the file "open" (i.e., displayed) on your computer while you are editing/changing the file
-
-

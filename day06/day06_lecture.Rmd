@@ -1,0 +1,139 @@
+---
+title: "Day 6 Lecture"
+output: html_document
+---
+
+# Today's agenda
+
+  - catching up
+  - questions
+  - quick re-cap
+  - sketch of "data munging" procedure
+  - stage 1 munging: import/fix
+  - PRACTICE
+  - stage 2 munging: iterative exploration/transformation
+  - introducing `tidyr` and "tidy data" concepts
+  - PRACTICE
+  - more plotting (colors, facets)
+  - summarizing/aggregating with `dplyr` package
+  - quick intro to writing functions
+  - PRACTICE
+
+# Catching up
+
+  - UGH, SORRY
+  - "make-up" possibilities
+  - sketch of rest of course:
+    - today: reshaping, more plotting, aggregating
+    - tomorrow: polishing plots, if/else structures, loops
+    - Thursday: writing functions, vectorizing
+    - Friday: more practice, wish list stuff
+    - Monday/Tuesday(?): review, wish list
+    
+# Questions?
+
+```{r}
+
+```
+
+# A proposed "data munging" outline/procedure
+
+Stage 1: initial loading/fixing
+  1. Read/import data
+    - `read.table()` family from base R for simple text
+    - `read_*()` family from `readr` package also good, can be faster
+    - functions from `haven` for STATA/SPSS
+    - functions from `readxl` for (fancy) Excel files
+  2. Quick peek to check
+    - head()
+    - summary()
+  3. Fix column names (make easier to work with)
+    - colnames(yourdata)
+    - colnames(yourdata) <- c("vector", "of", "new", "names")
+    - colnames(yourdata)[c(1:3, 7, 14:16)] <- c("can", "rename", "just", "some", "selected", "columns", "too")
+  4. Find/check NAs or other special values
+    - summary()
+    - is.na()
+  5. Fix data types of columns
+    - class() 
+    - as.*()
+    - ifelse() to change some values
+  6. Fix level labels/data coding problems
+    - levels(data$factor)
+    - levels(data$factor) <- c("can", "assign", "new", "labels", "to", "factors")
+    - ifelse()
+  7. Fix level order (if needed/obvious)
+    - if you want to dictate the order of a (small-ish) number of levels: factor()
+    - if you just want to pick one level to be level 1 (ie "reference level"): relevel()
+    - if you want to use another column in your data to set the order of levels: reorder()
+
+# PRACTICE #1 -- #7
+
+# Munging Stage 2: iterative exploration, reformatting, transformation
+
+  1. Plot something
+    - ggplot()
+  2. Subset
+    - [ , ]
+    - filter(), select() from `dplyr`
+  3. Combine with other data
+    - rbind(), merge() from base R
+    - bind_rows(), *_join() family from `dplyr`
+  4. Transform
+    - assign values to columns
+    - mutate() from `dplyr`
+  5. Reshape
+    - gather(), spread() from `tidyr`
+    - fancier stuff with `reshape2` package
+  6. Group/summarize
+    - group_by(), summarize() from `dplyr`
+
+# PRACTICE/REVIEW #8 -- #13
+
+# Tidy data
+
+Some principles/practices
+
+  1. Get data into columns (out of column names, "complex" column values)
+  2. Get a 1:1 match between a (conceptual) type of data/measure and a column
+    - i.e., "long" data
+  3. Use/create columns to represent groupings you care about
+
+# Introducing `tidyr`
+
+Plot along the way!
+
+```{r}
+my.iris <- iris
+
+# separate()
+
+# gather()
+
+# spread()
+
+```
+
+# PRACTICE: #14 -- #17
+
+# Grouping and aggregation with `dplyr`
+
+```{r}
+# summarize()
+
+# group_by()
+
+
+```
+
+# Quick intro to writing functions
+
+FUNCTIONNAME <- function(arg1, arg2, ...) {
+  YOUR CODE HERE
+}
+
+```{r}
+
+```
+
+# PRACTICE #18 -- #20

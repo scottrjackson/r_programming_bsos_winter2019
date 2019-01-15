@@ -109,6 +109,10 @@ class(c(as.factor("one"), 2, 33))
 c(as.factor("one"), "two", "three")
 class(c(as.factor("one"), "two", "three"))
 
+x <- as.factor("one")
+x
+as.character(x)
+
 c(as.factor("one"), FALSE)
 class(c(as.factor("one"), FALSE))
 
@@ -120,6 +124,16 @@ class(c(x, FALSE, TRUE))
 
 c("false", "true", FALSE, TRUE)
 class(c("false", "true", FALSE, TRUE))
+
+x <- 1
+xL <- 1L
+typeof(x)
+typeof(xL)
+class(x)
+class(xL)
+x <- 1:10
+typeof(factor(x))
+class(factor(x))
 
 ```
 

@@ -1,0 +1,153 @@
+---
+title: "Day 6 Practice"
+output: html_document
+---
+
+# Section 1
+
+1. Load the `french_fries` data set into R by installing/loading the `reshape2` package.
+
+```{r}
+
+```
+
+
+2. Take a quick peek at the data using a few different functions to get a basic feel for the data.
+
+```{r}
+
+```
+
+
+3. Change the first three column names to "week", "oil.type", and "participant"
+
+```{r}
+
+```
+
+
+4. Locate NAs in the data. Look at a subset of the data where NAs appear. Any patterns? What should be done about these?
+
+```{r}
+
+```
+
+
+5. Check the data types of all columns. Anything to change? Make those changes.
+
+```{r}
+
+```
+
+
+6. Some of the factor levels look like numbers. Why is this potentially "dangerous"? Change these to be more obvious as factor levels and not numeric data.
+
+```{r}
+
+```
+
+
+7. Make a new column that is a copy of the "oil.type" column, and change the order of levels using one of the recommended methods.
+
+```{r}
+
+```
+
+
+# Section 2
+
+8. Make a copy of the data with just two of the oil treatment levels. Update this subset to remove the "missing" level from the appropriate factors.
+
+```{r}
+
+```
+
+
+9. Run the code below and imagine this is data from a few new people. Create a new data frame that appends this new data to the original data.  What if there is something different about these new people? How can you keep track of that after appending?
+
+```{r}
+
+```
+
+
+10. Run the code below and imagine this is a separate table of data about participants. Merge this with the original data, using both base R and `dplyr` functions.
+
+```{r}
+
+```
+
+
+11. Back to just the original data, plot a histogram of the "potato" rating values.
+
+```{r}
+
+```
+
+
+12. Create a subset of the data that only looks at the "potato" dimension of flavor, and subsets to only positive (i.e., non-zero) values.  Plot a histogram of this subsetted data to confirm that you got rid of zeros.
+
+```{r}
+
+```
+
+
+13. Log-transform and plot the "potato" values for this subset 
+
+```{r}
+
+```
+
+
+# Section 3
+
+14. Reshape the french fries data to a "long" format, where all of the flavor ratings are in a single column, and another column designates the flavor "dimension" or "scale".
+
+```{r}
+
+```
+
+
+15. Now reshape this so that the ratings under different treatments are in different columns (using re-named oil treatment levels, not the original "numeric" levels).
+
+```{r}
+
+```
+
+
+16. Plot scatterplots and regression lines for pairs of different treatment types using this "wide" data. Also use `cor.test()` to test the correlations, and compare those results to the plots.
+
+```{r}
+
+```
+
+
+17. Use boxplots to compare the values of just the "potato" dimension, comparing different oil treatments.
+
+```{r}
+
+```
+
+
+# Section 4
+
+18. Define a function that computes the standard error of a mean. The formula is "the standard deviation divided by the square root of the number of observations". Check that it works with some (generated) random data.
+
+```{r}
+
+```
+
+
+19. Use `group_by()` and `summarize()` to get some summary statistics for the "potato" ratings by treatment, collaposed over time, subject, and rep.  Compute the mean, standard deviation, number of observations, and standard error for each treatment. For the latter, use your function from above.
+
+```{r}
+
+```
+
+
+20. Using these summary values, plot the means and 95% confidence intervals using `geom_point` and `geom_errorbar`.
+
+```{r}
+
+```
+
+
