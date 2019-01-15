@@ -21,7 +21,12 @@ ff <- french_fries
 ```{r}
 head(ff)
 summary(ff)
-
+nrow(ff)
+ncol(ff)
+colnames(ff)
+length(ff)
+length(ff[[1]])
+# View(ff)
 ```
 
 
@@ -60,6 +65,8 @@ summary(ff)
 lapply(ff, class)
 head(as.tibble(ff))
 
+# as.data.frame() "cleans up" a tibble
+
 ff$rep.factor <- as.factor(ff$rep)
 ff <- mutate(ff, rep.factor.dplyr = as.factor(rep),
              week.num = as.numeric(as.character(week))) # dplyr way
@@ -71,6 +78,7 @@ summary(ff)
 6. Some of the factor levels look like numbers. Why is this potentially "dangerous"? Change these to be more obvious as factor levels and not numeric data.
 
 ```{r}
+levels(ff$rep.factor.dplyr)
 levels(ff$rep.factor.dplyr) <- c("first", "second")
 xtabs(~ rep + rep.factor.dplyr, ff)
 levels(ff$oil.type)
@@ -93,7 +101,28 @@ xtabs(~ oil.type + oil.type2, ff)
 8. Make a copy of the data with just two of the oil treatment levels. Update this subset to remove the "missing" level from the appropriate factors.
 
 ```{r}
+head(ff)
+summary(ff)
+ff$rep <- as.factor(ff$rep)
+levels(ff$rep) <- c("first", "second")
+summary(ff$rep)
 
+ff.oil2and3.v1 <- ff[ff$oil.type != "oil1", ] # safe when no NAs in oil.type
+ff.oil2and3.v2 <- ff[!ff$oil.type %in% "oil1", ] # will exclude NAs
+ff.oil2and3.v3 <- ff[ff$oil.type %in% c("oil2", "oil3"), ]
+
+ff.oil2and3.dplyr <- filter(ff, oil.type %in% c("oil2", "oil3"))
+
+summary(ff.oil2and3.v3)
+
+levels(ff.oil2and3.v3$oil.type)
+
+ff.oil2and3.v3$oil.type.clean <- factor(ff.oil2and3.v3$oil.type, levels = c("oil2", "oil3"))
+summary(ff.oil2and3.v3)
+xtabs(~ oil.type + oil.type.clean, ff.oil2and3.v3)
+
+ff.subset.clean <- droplevels(ff.oil2and3.v3)
+summary(ff.subset.clean)
 ```
 
 
@@ -107,7 +136,40 @@ xtabs(~ oil.type + oil.type2, ff)
 10. Run the code below and imagine this is a separate table of data about participants. Merge this with the original data, using both base R and `dplyr` functions.
 
 ```{r}
+levels(ff.subset.clean$participant)
+unique(ff.subset.clean$participant)
 
+# SIDE NOTE: unique() on a data.frame drops duplicate rows!
+
+set.seed(87)
+people.data <- data.frame(subject = c("3", "15", "19", "70", "71"),
+                          age = sample(20:50, 5, replace = TRUE),
+                          like.burgers = sample(c(TRUE, FALSE), 5, replace = TRUE, prob = c(.7, .3)))
+people.data
+
+ff.basemerge <- merge(ff, people.data) # wrong!
+nrow(ff.basemerge)
+
+# try again
+ff.basemerge <- merge(x = ff, y = people.data, 
+                      by.x = "participant",
+                      by.y = "subject") # default all = FALSE
+nrow(ff.basemerge)
+head(ff.basemerge)
+summary(ff.basemerge$participant)
+
+# this means, "join by these two columns"
+ff.innerjoin <- inner_join(ff, people.data, 
+                           by = c("participant", "subject"))
+ff.innerjoin <- inner_join(ff, people.data,
+                           by = c("participant" = "subject"))
+summary(ff.innerjoin)
+
+ff.left <- left_join(ff, people.data,
+                     by = c("participant" = "subject"))
+nrow(ff.left)
+nrow(ff)
+summary(ff.left)
 ```
 
 
