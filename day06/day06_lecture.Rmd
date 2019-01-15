@@ -101,6 +101,20 @@ head(mysleep)
 
 # PRACTICE/REVIEW #8 -- #13
 
+# SIDE NOTE: graphics
+
+Devices
+
+```{r}
+dev.off()
+
+pdf("potato histogram.pdf")
+ggplot(french_fries, aes(potato)) + geom_histogram(binwidth = .2)
+dev.off()
+
+```
+
+
 # Tidy data
 
 Some principles/practices
@@ -116,35 +130,55 @@ Plot along the way!
 
 ```{r}
 my.iris <- iris
-
-# separate()
+head(my.iris)
+my.iris$plant <- as.factor(paste("plant", 1:nrow(my.iris), sep = ""))
 
 # gather()
+my.iris.long <- gather(my.iris, plant.dimension, cm, Sepal.Length:Petal.Width)
+head(my.iris.long)
+
+# separate()
+my.iris.long <- separate(my.iris.long, col = "plant.dimension",
+                         into = c("plant.part", "dimension"),
+                         sep = "\\.")
 
 # spread()
-
+my.iris.widedim <- spread(my.iris.long, key = "dimension", value = "cm")
+head(my.iris.widedim)
 ```
 
-# PRACTICE: #14 -- #17
-
-# Grouping and aggregation with `dplyr`
+Reshaping helps support data exploration with plotting, by changing the columns you can map to aesthetics:
 
 ```{r}
-# summarize()
+ggplot(my.iris.widedim, aes(Width, Length)) + geom_point()
 
-# group_by()
+ggplot(my.iris.widedim, aes(Width, Length)) + geom_point() + geom_smooth()
+ggplot(my.iris.widedim, aes(Width, Length)) + geom_point() + geom_smooth(method = "lm")
 
+ggplot(my.iris.widedim, aes(Width, Length, color = plant.part)) +
+  geom_point() +
+  geom_smooth(method = "lm")
+
+ggplot(my.iris.widedim, aes(Width, Length)) +
+  geom_point(aes(color = plant.part)) +
+  geom_smooth(method = "lm")
+
+ggplot(my.iris.widedim, aes(Width, Length)) +
+  geom_point(aes(color = plant.part)) +
+  geom_smooth(method = "lm", aes(linetype = Species))
+
+ggplot(my.iris.widedim, aes(Width, Length, color = plant.part)) +
+  geom_point(aes(size = Species)) +
+  geom_smooth(method = "lm")
+
+ggplot(my.iris.widedim, aes(Width, Length, color = plant.part)) +
+  geom_point() +
+  geom_smooth(method = "lm") + 
+  facet_wrap(~ Species)
+
+ggplot(my.iris.widedim, aes(Width, Length, color = plant.part)) +
+  geom_point() +
+  geom_smooth(method = "lm") + 
+  facet_wrap(~ Species, scales = "free")
 
 ```
-
-# Quick intro to writing functions
-
-FUNCTIONNAME <- function(arg1, arg2, ...) {
-  YOUR CODE HERE
-}
-
-```{r}
-
-```
-
-# PRACTICE #18 -- #20

@@ -176,6 +176,11 @@ summary(ff.left)
 11. Back to just the original data, plot a histogram of the "potato" rating values.
 
 ```{r}
+ff <- french_fries
+ggplot(ff, aes(x = potato)) + geom_histogram()
+ggplot(ff, aes(potato)) + geom_histogram(binwidth = .3)
+
+ggplot(ff, aes(x = potato, y = grassy)) + geom_point()
 
 ```
 
@@ -183,6 +188,14 @@ summary(ff.left)
 12. Create a subset of the data that only looks at the "potato" dimension of flavor, and subsets to only positive (i.e., non-zero) values.  Plot a histogram of this subsetted data to confirm that you got rid of zeros.
 
 ```{r}
+ff <- french_fries
+ff.nozero <- filter(ff, potato > 0)
+ggplot(ff, aes(potato)) + geom_histogram(binwidth = .05)
+ggplot(ff.nozero, aes(potato)) + geom_histogram(binwidth = .05)
+ggplot(filter(ff, potato > 0), aes(potato)) +
+  geom_histogram(binwidth = .05)
+
+
 
 ```
 
@@ -190,60 +203,12 @@ summary(ff.left)
 13. Log-transform and plot the "potato" values for this subset 
 
 ```{r}
+ff.nozero$log.potato <- log(ff.nozero$potato)
+ggplot(ff.nozero, aes(log.potato)) + geom_histogram()
+
+ggplot(ff.nozero, aes(log(potato))) + geom_histogram()
+
+
 
 ```
-
-
-# Section 3
-
-14. Reshape the french fries data to a "long" format, where all of the flavor ratings are in a single column, and another column designates the flavor "dimension" or "scale".
-
-```{r}
-
-```
-
-
-15. Now reshape this so that the ratings under different treatments are in different columns (using re-named oil treatment levels, not the original "numeric" levels).
-
-```{r}
-
-```
-
-
-16. Plot scatterplots and regression lines for pairs of different treatment types using this "wide" data. Also use `cor.test()` to test the correlations, and compare those results to the plots.
-
-```{r}
-
-```
-
-
-17. Use boxplots to compare the values of just the "potato" dimension, comparing different oil treatments.
-
-```{r}
-
-```
-
-
-# Section 4
-
-18. Define a function that computes the standard error of a mean. The formula is "the standard deviation divided by the square root of the number of observations". Check that it works with some (generated) random data.
-
-```{r}
-
-```
-
-
-19. Use `group_by()` and `summarize()` to get some summary statistics for the "potato" ratings by treatment, collaposed over time, subject, and rep.  Compute the mean, standard deviation, number of observations, and standard error for each treatment. For the latter, use your function from above.
-
-```{r}
-
-```
-
-
-20. Using these summary values, plot the means and 95% confidence intervals using `geom_point` and `geom_errorbar`.
-
-```{r}
-
-```
-
 

@@ -1,0 +1,85 @@
+---
+title: "Day 6 Homework"
+output: html_document
+---
+
+
+1. Create a small (fake) data set that gives some extra data on some kind of group in your data. For example, person-level data on subjects, country-level data if you have countries, something like that.  In this data frame, leave some values out, so that (for example) some of the people/countries/whatever in your primary data are missing from this smaller data set.  Conversely, add some additional values in the small data (for example, some people that are not in your primary data).
+
+```{r}
+
+```
+
+2. Practice merging this data together. First, perform a "full join", where you don't lose any of the values from EITHER data set. Do this with both base R and dplyr functions. Check the # of rows in the new data set, and try to understand why it increased as much as it did.
+
+```{r}
+
+```
+
+
+3. Now try an "inner join", where you only end up with the data where the two data sets overlap. Again, both base R and dplyr methods.
+
+```{r}
+
+```
+
+
+4. Now try a "left join" and a "right join". In a left join, the all of the cases (rows) of the "left-hand" data set are retained, and the other data is only merged in "where available". For example, if you do a left join with your primary data set as the "left hand" data, you should end up with all the original data, but only a subset of the new data will be merged in.  A "right join" is the same concept, just that it's the "right hand" data set that is retained in full. In the `dplyr` functions, "left" is just the first data frame argument, and "right" is the second.  Try both, and examine the results to make sure it makes sense.
+
+```{r}
+
+```
+
+
+5. Find some other aspect of your data that needs to be combined or merged in some way.  This could be a variety of things:
+  - multiple "sheets" in an Excel
+  - multiple files that should be combined into one data set
+  - properties that need to be merged in to one data set. For example:
+    - you have a table of subject properties (gender, handedness, etc.) that need to be merged into the item-level data
+    - you have other information on countries (population, etc.) that need to be merged in
+  - if you DON'T have this naturally-occurring issue, figure out a way to manufacture it. For example:
+    - split up your data into chunks
+    - make up some new table of information that you want to merge in
+  - Explain (in words) what you are trying to do
+  - Try it!
+  - Perform several checks to confirm whether it worked or not
+  - If it didn't work as intended, describe what happened, and see if you can figure out why
+  
+```{r}
+
+```
+
+6. Use ggplot to plot a histogram of some variable in your data. Anything unexpected?
+
+```{r}
+
+```
+
+
+7. Think about the "shape" of your data. Is it "long" or "wide"? Some of both?  Try to identify a way in which it could be make "longer" (i.e., by collapsing two or more columns into a single column along with a "grouping" column) or "wider" (i.e., by splitting out a column across multiple new columns, by some grouping factor).  Use `gather()` and `spread()` from the `tidyr` package to go back and forth between long and wide shapes.
+
+```{r}
+
+```
+
+
+8. Make your data "wide" enough that there are two numeric columns that might have a relationship between them. Use ggplot and `geom_point()` to plot a scatterplot of these data.
+
+```{r}
+
+```
+
+
+9. Identify some other "grouping" variable (i.e., factor column) in your data. Re-do the scatterplot from above, but in addition try mapping this additional factor to some other aesthetic, such as `color`, `fill`, `shape`, `size`, etc.
+
+```{r}
+
+```
+
+
+10. Now try splitting the scatterplot into multiple plots based on this grouping factor (or a different one). Use `facet_wrap` in ggplot.
+
+```{r}
+
+```
+
