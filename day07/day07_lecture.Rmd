@@ -1,0 +1,241 @@
+---
+title: "Day 7 lecture"
+output: html_document
+---
+
+# Today's agenda
+
+  - questions/review
+  - PRACTICE: reshaping/plotting
+  - boxplots
+  - summarizing/aggregating with `dplyr` package
+  - quick intro to writing functions
+  - PRACTICE
+  - tweaking plots
+  - using `scale_...()` functions in `ggplot2`
+    - labels
+    - legends
+    - scales
+  - adding more layers
+  - annotation on plots
+  - if()
+  - for() loops
+
+
+# PRACTICE: #1 -- #3
+
+# Boxplots
+
+```{r}
+
+```
+
+# Grouping and aggregation with `dplyr`
+
+```{r}
+# summarize()
+
+# group_by()
+
+
+```
+
+# Quick intro to writing functions
+
+FUNCTIONNAME <- function(arg1, arg2, ...) {
+  YOUR CODE HERE
+}
+
+```{r}
+
+```
+
+# Aggregation & more plotting
+
+```{r}
+mytips <- tips # from reshape2 package
+
+
+
+```
+
+# PRACTICE #4 -- #6
+
+# Tweaking plots
+
+##  Audience for plots
+  - For data exploration & understanding: yourself
+  - For explanation & story-telling: others
+
+## Colors
+
+  - http://colorbrewer2.org/
+
+```{r}
+colors()
+
+myris <- iris
+
+myris$plant <- paste("plant", 1:nrow(myris), sep = "")
+
+myris <- gather(myris, myvariable, cm, 1:4)
+myris <- separate(myris, myvariable, c("part", "dimension"), sep = "\\.")
+myris$part <- as.factor(myris$part)
+myris$dimension <- as.factor(myris$dimension)
+
+myris.hist <- ggplot(myris, aes(cm)) + geom_histogram(aes(fill = Species)) 
+
+myris.hist + scale_fill_manual(values = c("red", "blue", "green"))
+
+# RGB
+umd.red <- rgb(224, 58, 62, maxColorValue = 255)
+umd.gold <- rgb(255, 225, 79, maxColorValue = 255)
+umd.black <- rgb(0, 0, 0, maxColorValue = 255)
+
+maryland.colors <- c(umd.red, umd.gold, umd.black)
+
+myris.hist + scale_fill_manual(values = c(umd.red, umd.gold, umd.black))
+myris.hist + scale_fill_manual(values = maryland.colors)
+
+my.colors <- c("pink", "seashell", umd.gold)
+myris.hist + scale_fill_manual(values = my.colors)
+```
+
+## Labels
+  - multiple ways to change labels (of axes, etc.)
+    - change the data
+    - use "convenience" functions
+    - modify the scale
+
+```{r}
+
+ggplot(myris, aes(cm)) + geom_histogram()
+
+# method #1: change your data
+myris$centimeters <- myris$cm
+# could also use colnames
+
+ggplot(myris, aes(centimeters)) + geom_histogram()
+
+# method #2: "shortcut" convenience function
+ggplot(myris, aes(cm)) + geom_histogram() + xlab("centimeters")
+
+myris.wide <- select(myris, -centimeters) %>% spread(dimension, cm)
+
+ggplot(myris.wide, aes(x = Length, y = Width)) + geom_point() + xlab("length of the part") + ylab("width of the part")
+
+# scale_[aesthetic name]_[scale type]
+ggplot(myris.wide, aes(x = Length, y = Width)) + geom_point() + 
+  scale_x_continuous(name = "length of a piece of the flower")
+
+```
+
+## Other scale properties
+  - labels
+  - breaks
+  - scaling (e.g., log)
+
+```{r}
+myris.scatter <- ggplot(myris.wide, aes(x = Length, Width)) + geom_point()
+myris.scatter
+
+myris.scatter + scale_x_continuous(labels = c("two", "four", "six", "seven", "eight"), breaks = c(2, 4, 6, 7, 8))
+myris.scatter + scale_x_continuous(breaks = 1:8, labels = c("two", "four", "six", "eight", "red", "green", "up", "down"), name = "weird length")
+
+myris.scatter + scale_x_continuous(breaks = seq(1, 8, .3))
+myris.scatter + scale_y_continuous(breaks = seq(0, 5, .25))
+
+myris.scatter + scale_x_log10(breaks = seq(0, 8, 2))
+
+```
+
+## Legends
+  - position: using theme
+  - name: using scale
+  - levels: changing data
+
+```{r}
+myris.scatter2 <- ggplot(myris.wide, aes(Length, Width)) + geom_point(aes(color = Species), size = 4)
+set1.colors <- scale_color_brewer(palette = "Set1")
+myris.scatter2 
+myris.scatter2 + set1.colors
+
+myris.scatter3 <- ggplot(myris.wide, aes(Length, Width)) + geom_point(aes(color = Species, shape = Species), size = 4)
+myris.scatter3
+
+ggplot(myris.wide, aes(Length, Width)) + geom_point(aes(color = Species, shape = part), size = 4)
+
+myris.scatter2 + set1.colors + theme(legend.position = "top")
+myris.scatter2 + set1.colors + theme(legend.position = "none")
+
+
+myris.scatter2 + scale_color_brewer(labels = c("a", "b", "c"), palette = "Set1")
+
+myris.wide2 <- myris.wide
+levels(myris.wide2$Species)
+levels(myris.wide2$Species) <- c("a", "b", "c")
+
+ggplot(myris.wide2, aes(x = Length, Width)) + geom_point(aes(color = Species), size = 4) + set1.colors
+
+# changing font
+myris.scatter2 + scale_color_discrete(name = "Iris species") + theme(text = element_text(family = "mono", size = 20))
+
+windowsFonts()
+#quartzFonts()
+
+windowsFonts(awesome = windowsFont("TT Comic Sans MS"),
+             blackadder = windowsFont("TT Blackadder ITC Regular"))
+windowsFonts()
+
+myris.scatter2 + scale_color_brewer(palette = "Set1", name = "Iris species") + theme(plot.title = element_text(family = "awesome", size = 20)) + ggtitle("great title")
+
+```
+
+- more tips on fonts using the `extrafont` package: http://blog.revolutionanalytics.com/2012/09/how-to-use-your-favorite-fonts-in-r-charts.html
+- even more hilarity: https://cran.r-project.org/web/packages/xkcd/index.html
+
+## Themes
+
+```{r}
+# theme_minimal(), theme_bw(), etc.
+
+```
+
+
+## More on themes
+
+Check out this page for LOTS of options: http://docs.ggplot2.org/current/theme.html
+
+# Additional layers
+
+```{r}
+myris.scatter2 + geom_hline(yintercept = 2.5, linetype = 2)
+myris.scatter2 + geom_vline(xintercept = 5, linetype = 3)
+myris.scatter2 + geom_abline(intercept = 0, slope = 1, color = "red", linetype = 2) + 
+  geom_hline(yintercept = 2.5, linetype = 2) +
+  geom_vline(xintercept = 5, linetype = 3)
+
+```
+
+# Text geom
+
+```{r}
+ggplot(myris.wide, aes(x = Length, y = Width)) + geom_text(aes(label = plant))
+
+```
+
+
+# Annotation on plots
+
+```{r}
+myris.scatter2 + geom_hline(yintercept = 2.5, linetype = 2) + 
+  annotate(geom = "text", x = 2, y = 2.7, label = "interesting threshold")
+
+myris.scatter2 + geom_hline(yintercept = 2.5, linetype = 2) + 
+  annotate(geom = "text", x = 2, y = 2.7, label = "interesting threshold") +
+  annotate(geom = "rect", xmin = 5, xmax = 7, ymin = 2, ymax = 3, alpha = .5) +
+  annotate(geom = "text", x = 7.5, y = 2.2, label = "<-- danger zone!", color = "red")
+
+```
+
+

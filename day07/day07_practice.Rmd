@@ -1,0 +1,61 @@
+---
+title: "Day 7 Practice"
+output: html_document
+---
+
+
+# Section 1
+
+0. Load packages and make a copy of the `french_fries` data (from the `reshape2` package) in your workspace.
+
+```{r}
+library(tidyverse)
+library(reshape2)
+ff <- french_fries
+
+```
+
+1. Reshape the french fries data to a "long" format, where all of the flavor ratings are in a single column, and another column designates the flavor "dimension" or "scale".
+
+```{r}
+
+```
+
+
+2. Now reshape this so that the ratings under different treatments are in different columns. HINT: you may want to change the factor level labels before reshaping.
+
+```{r}
+
+```
+
+
+3. Plot scatterplots and regression lines for pairs of different treatment types using this "wide" data. Also use `cor()` or `cor.test()` to test the correlations, and compare those results to the plots.
+
+```{r}
+
+```
+
+
+# Section 2
+
+4. Define a function that computes the standard error of a mean. The formula is "the standard deviation divided by the square root of the number of observations". Check that it works with some (generated) random data. 
+
+```{r}
+
+```
+
+
+5. With the french fries data, use `group_by()` and `summarize()` to get some summary statistics for the "potato" ratings by treatment, collapsed over time, subject, and rep.  Compute the mean, standard deviation, number of observations, and standard error for each treatment. For the latter, use your function from above.
+
+```{r}
+
+```
+
+
+6. Using these summary values, plot the means and 95% confidence intervals using `geom_point` and `geom_errorbar`. HINT: use +/- 1.96 * the standard error for the upper and lower bounds of the 95% CI.
+
+```{r}
+
+```
+
+
