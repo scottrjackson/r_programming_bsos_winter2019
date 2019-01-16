@@ -27,6 +27,17 @@ output: html_document
 # Boxplots
 
 ```{r}
+ff <- french_fries
+
+ggplot(ff, aes(treatment, potato)) + geom_boxplot()
+
+ff.long <- gather(ff, flavor, rating, potato:painty)
+head(ff.long)
+ggplot(ff.long, aes(treatment, rating)) + geom_boxplot() + facet_wrap(~ flavor)
+
+ggplot(ff.long, aes(treatment, rating)) + geom_violin() + facet_wrap(~ flavor)
+
+ggplot(ff.long, aes(treatment, rating)) + geom_boxplot() + facet_grid(rep ~ flavor)
 
 ```
 
@@ -34,9 +45,48 @@ output: html_document
 
 ```{r}
 # summarize()
+head(ff.long)
+summarize(ff.long, mean.rating = mean(rating, na.rm = TRUE))
+summarize(ff.long, mean.rating = mean(rating, na.rm = TRUE),
+          sd.rating = sd(rating, na.rm = TRUE),
+          N = length(rating))
+
+mean(ff.long$rating, na.rm = TRUE)
 
 # group_by()
+summarize(group_by(ff.long, treatment), mean.rating = mean(rating, na.rm = TRUE))
 
+summarize(group_by(ff.long, treatment), mean.rating = mean(rating, na.rm = TRUE))
+
+my.results <- summarize(group_by(ff.long, treatment, flavor), mean.rating = mean(rating, na.rm = TRUE))
+
+my.results.df <- as.data.frame(my.results)
+
+my.results[, 1]
+class(my.results[, 1])
+
+my.results.df[, 1]
+class(my.results.df[, 1])
+class(my.results.df[, 1:2])
+
+```
+
+# Piping
+
+```{r}
+library(magrittr)
+
+summarize(group_by(ff.long, treatment), mean.rating = mean(rating, na.rm = TRUE))
+
+group_by(ff.long, treatment, flavor) %>% 
+  summarize(mean.rating = mean(rating, na.rm = TRUE)) %>% 
+  spread(flavor, mean.rating) %>% 
+  as.data.frame()
+
+ff.long %>% group_by(treatment, flavor) %>% 
+  summarize(mean.rating = mean(rating, na.rm = TRUE)) %>% 
+  spread(flavor, mean.rating) %>% 
+  as.data.frame()
 
 ```
 
@@ -47,17 +97,21 @@ FUNCTIONNAME <- function(arg1, arg2, ...) {
 }
 
 ```{r}
+twosds <- function(vector.of.numbers) {
+  output <- sd(vector.of.numbers) * 2
+  return(output) # return() not strictly necessary)
+  # output # this also works, instead of return(output)
+}
+
+# twosds <- function(x) { sd(x) * 2 }
+
+twosds(rnorm(1e5, sd = 3))
+twosds(rnorm(1e5, sd = 2.3))
+twosds(vector.of.numbers = rnorm(1e5, sd = 76))
 
 ```
 
 # Aggregation & more plotting
-
-```{r}
-mytips <- tips # from reshape2 package
-
-
-
-```
 
 # PRACTICE #4 -- #6
 
@@ -84,8 +138,9 @@ myris$part <- as.factor(myris$part)
 myris$dimension <- as.factor(myris$dimension)
 
 myris.hist <- ggplot(myris, aes(cm)) + geom_histogram(aes(fill = Species)) 
-
+myris.hist
 myris.hist + scale_fill_manual(values = c("red", "blue", "green"))
+myris.hist + scale_fill_manual(values = c("thistle3", "lemonchiffon1", "linen"))
 
 # RGB
 umd.red <- rgb(224, 58, 62, maxColorValue = 255)
@@ -99,6 +154,9 @@ myris.hist + scale_fill_manual(values = maryland.colors)
 
 my.colors <- c("pink", "seashell", umd.gold)
 myris.hist + scale_fill_manual(values = my.colors)
+
+myris.hist + scale_fill_brewer(palette = "Set1")
+
 ```
 
 ## Labels
@@ -177,6 +235,8 @@ levels(myris.wide2$Species) <- c("a", "b", "c")
 
 ggplot(myris.wide2, aes(x = Length, Width)) + geom_point(aes(color = Species), size = 4) + set1.colors
 
+ggplot(myris.wide, aes(Length, Width)) + geom_point(color = "red", size = 4)
+
 # changing font
 myris.scatter2 + scale_color_discrete(name = "Iris species") + theme(text = element_text(family = "mono", size = 20))
 
@@ -184,10 +244,11 @@ windowsFonts()
 #quartzFonts()
 
 windowsFonts(awesome = windowsFont("TT Comic Sans MS"),
-             blackadder = windowsFont("TT Blackadder ITC Regular"))
+             blackadder = windowsFont("TT Blackadder ITC Regular"),
+             brush = windowsFont("Brush Script MT Italic"))
 windowsFonts()
 
-myris.scatter2 + scale_color_brewer(palette = "Set1", name = "Iris species") + theme(plot.title = element_text(family = "awesome", size = 20)) + ggtitle("great title")
+myris.scatter2 + scale_color_brewer(palette = "Set1", name = "Iris species") + theme(plot.title = element_text(family = "brush", size = 20)) + ggtitle("great title")
 
 ```
 
@@ -198,8 +259,21 @@ myris.scatter2 + scale_color_brewer(palette = "Set1", name = "Iris species") + t
 
 ```{r}
 # theme_minimal(), theme_bw(), etc.
+myris.scatter2 + theme_minimal() + theme()
+myris.scatter2 + theme_bw()
+myris.scatter2 + theme_classic()
 
 ```
+
+## axis limits
+
+```{r}
+
+myris.scatter + xlim(-4, 20) + ylim(-3, 20)
+myris.scatter + scale_y_continuous(expand = c(0, 4))
+
+```
+
 
 
 ## More on themes
@@ -237,5 +311,4 @@ myris.scatter2 + geom_hline(yintercept = 2.5, linetype = 2) +
   annotate(geom = "text", x = 7.5, y = 2.2, label = "<-- danger zone!", color = "red")
 
 ```
-
 

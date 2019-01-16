@@ -18,13 +18,24 @@ ff <- french_fries
 1. Reshape the french fries data to a "long" format, where all of the flavor ratings are in a single column, and another column designates the flavor "dimension" or "scale".
 
 ```{r}
-
+ff.long <- gather(ff, flavor, rating, potato:painty)
+ff.long.alt <- gather(ff, flavor, rating, c("potato", "buttery", "grassy", "rancid", "painty"))
+head(ff.long)
+levels(as.factor(ff.long$flavor))
+unique(ff.long$flavor)
+summary(ff.long)
+head(ff.long.alt)
 ```
 
 
 2. Now reshape this so that the ratings under different treatments are in different columns. HINT: you may want to change the factor level labels before reshaping.
 
 ```{r}
+ff.wide1 <- spread(ff.long, treatment, rating)
+head(ff.wide1)
+levels(ff.long$treatment) <- c("oil1", "oil2", "oil3")
+ff.wide2 <- spread(ff.long, treatment, rating)
+head(ff.wide2)
 
 ```
 
@@ -32,6 +43,14 @@ ff <- french_fries
 3. Plot scatterplots and regression lines for pairs of different treatment types using this "wide" data. Also use `cor()` or `cor.test()` to test the correlations, and compare those results to the plots.
 
 ```{r}
+ggplot(ff.wide2, aes(oil1, oil2)) + geom_point()
+ggplot(ff.wide2, aes(oil1, oil2)) + geom_point() + geom_smooth()
+ggplot(ff.wide2, aes(oil1, oil2)) + geom_point() + geom_smooth(method = "lm")
+
+ggplot(ff.wide2, aes(oil1, oil3)) + geom_point() + geom_smooth(method = "lm")
+ggplot(ff.wide2, aes(oil2, oil3)) + geom_point() + geom_smooth(method = "lm")
+
+cor(ff.wide2$oil1, ff.wide2$oil2, use = "complete.obs")
 
 ```
 
@@ -41,6 +60,12 @@ ff <- french_fries
 4. Define a function that computes the standard error of a mean. The formula is "the standard deviation divided by the square root of the number of observations". Check that it works with some (generated) random data. 
 
 ```{r}
+std.err <- function(x, should.i.drop.missing.data = FALSE) { 
+  sd(x, na.rm = should.i.drop.missing.data)/sqrt(length(x)) 
+} 
+
+std.err(rnorm(1e5, sd = 1))
+std.err(rnorm(1e5, sd = 10))
 
 ```
 
@@ -48,13 +73,21 @@ ff <- french_fries
 5. With the french fries data, use `group_by()` and `summarize()` to get some summary statistics for the "potato" ratings by treatment, collapsed over time, subject, and rep.  Compute the mean, standard deviation, number of observations, and standard error for each treatment. For the latter, use your function from above.
 
 ```{r}
+ff <- french_fries
 
+ff.means <- ff %>%
+  group_by(treatment) %>%
+  summarize(mean.rating = mean(potato, na.rm = TRUE),
+            se.rating = std.err(potato, should.i.drop.missing.data = TRUE))
 ```
 
 
 6. Using these summary values, plot the means and 95% confidence intervals using `geom_point` and `geom_errorbar`. HINT: use +/- 1.96 * the standard error for the upper and lower bounds of the 95% CI.
 
 ```{r}
+ggplot(ff.means, aes(treatment, mean.rating)) + geom_point() + geom_errorbar(aes(ymin = mean.rating - se.rating*1.96, ymax = mean.rating + se.rating*1.96))
+
+ggplot(ff.means, aes(treatment, mean.rating)) + geom_pointrange(aes(ymin = mean.rating - se.rating*1.96, ymax = mean.rating + se.rating*1.96))
 
 ```
 

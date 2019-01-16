@@ -1,8 +1,9 @@
 ---
-title: "Day 6 Homework"
+title: "Day 7 Homework"
 output: html_document
 ---
 
+NOTE: this counts for both Day 6 and Day 7 homework
 
 1. Create a small (fake) data set that gives some extra data on some kind of group in your data. For example, person-level data on subjects, country-level data if you have countries, something like that.  In this data frame, leave some values out, so that (for example) some of the people/countries/whatever in your primary data are missing from this smaller data set.  Conversely, add some additional values in the small data (for example, some people that are not in your primary data).
 
@@ -77,9 +78,67 @@ output: html_document
 ```
 
 
-10. Now try splitting the scatterplot into multiple plots based on this grouping factor (or a different one). Use `facet_wrap` in ggplot.
+10. Now try splitting the scatterplot into multiple plots based on this grouping factor (or a different one). Use `facet_wrap` or `facet_grid` in ggplot.
 
 ```{r}
+
+```
+
+11. Return to a plot that uses color (if you haven't made one yet, make one now).  Now use the appropriate scale (either `color` or `fill`) to change the colors being plotted.
+
+```{r}
+
+```
+
+12. Identify some aspect of your data where computing something like "cell means" makes sense. For example, getting the mean (or median, or whatever) value of some column, broken down by some grouping factors.  Use the reshaping, grouping, and summarizing functions in `tidyr` and `dplyr` to create a data frame that is a table of these cell means.
+
+```{r}
+
+```
+
+13. Now create a function that computes the standard error of a mean. This is the same as what we did in class, but try to do it from scratch before looking back at the code, to see if you can remember how to do it.
+
+```{r}
+
+
+```
+
+
+14. Now re-run the code that summarized your data into cell means, but add the code to also compute the standard errors at the same time, so that you end up with a table of means and standard errors.
+
+```{r}
+
+
+```
+
+
+15.  Now plot your table of means and standard errors, using geom_point() and geom_errorbar(), or using geom_pointrange(), or another geom of your choice.  Try to use +/- 1.96 times the standard error to set the upper and lower bounds of the error bar, because this will essentially give you a 95% confidence interval.
+
+```{r}
+
+
+```
+
+
+16.  Find some additional factor that you'd like to group these means by.  For example, if your first table of means was broken down by experimental condition, now you could try to break it down by both condition and participant gender.  Re-use your code from above to get the cell means & standard errors, but add this new factor to the grouping statement to get the new, more complex table of cell means.
+
+```{r}
+
+```
+
+
+17. Plot this new table of cell means, and map the new factor to an additional aesthetic, like color, or use it to facet your plot.  That is, this plot should look similar to the plot from #14 above, but also broken down by your new factor in some way.
+
+```{r}
+
+
+```
+
+
+18. Save both plots in #14 and #17 into a single PDF, and save the two cell means tables as (separate) CSV files.
+
+```{r}
+
 
 ```
 
