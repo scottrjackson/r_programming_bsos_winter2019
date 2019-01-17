@@ -18,9 +18,6 @@ output: html_document
     - scales
   - adding more layers
   - annotation on plots
-  - if()
-  - for() loops
-
 
 # PRACTICE: #1 -- #3
 

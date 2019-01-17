@@ -1,0 +1,84 @@
+---
+title: "Day 8 Practice"
+output: html_document
+---
+
+# Section 1
+
+1. Write an if...else statement to test whether a string matches "right", and if so, print "you win!", but if the string matches "wrong", print "you lose!", and if it's neither, print "the result is inconclusive".
+
+```{r}
+
+
+```
+
+
+2. Make a copy of the iris data. Use `ifelse()` to create a new column, where:
+  - if the value of Sepal.Length is less than 5, the new column should have a value of "low"
+  - if the value of Sepal.Length is greater than 6, it should have a value of "high"
+  - and if it's between 5 and 6 (inclusive), it should have a value of "mid"
+  - make a plot in ggplot2 to confirm that you did this right
+  
+```{r}
+
+
+```
+
+
+# Section 2
+
+3. Practice writing a very simple loop, that simply prints out each level of Species from the iris data.  In other words, the result of running the loop should look something like:
+
+"Level number 1 of Species is setosa"
+"Level number 2 of Species is versicolor"
+"Level number 3 of Species is virginica"
+
+```{r}
+
+
+```
+
+4. Now using the loop from #3 as a starting point, for each pass through the loop, save a PDF of a scatterplot of Sepal.Length by Sepal.Width, but the plot should be different each time through the loop in the following ways:
+  - each plot should only plot the subset of data from one species
+  - each plot should display the plotted species as the plot title (either use `labs()` or `ggtitle()`)
+  - each plot should be saved as a separate file, with the species in the file name
+  - how could you change this code to write all three plots out to the same file?
+
+```{r}
+# ggtitle() example
+ggplot(iris, aes(Sepal.Width)) + geom_histogram() + ggtitle("All species")
+
+```
+
+# Section 2
+
+4. Similar to what we did with the correlation power simulations, write code (including a loop) that creates a power simulation for comparing the means of two normally-distributed samples.
+  - compare the sample with both `t.test()` and `wilcox.test()`
+  - put the p-values from both tests in each simulation result
+  - compare the power of the t-test vs. the power of the Wilcoxon test
+  
+```{r}
+# set up the parameters of the simulation
+n.sim <- 1000
+# what other parameters are needed?
+
+# set up the "empty" data frame for the results
+sim.results <- data.frame(# WHAT SHOULD YOUR COLUMNS BE? 
+                          )
+
+# start the loop
+# each iteration of the loop should:
+# 1. generate data
+# 2. perform the analysis
+# 3. store the results (here, p-values) in the results data frame
+
+
+# examine the results
+# create a column that indicates which of the p-values reached significance
+
+
+# power = the proportion of "significant" results
+
+
+```
+

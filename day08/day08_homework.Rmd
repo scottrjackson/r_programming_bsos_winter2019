@@ -1,0 +1,16 @@
+---
+title: "Day 8 Homework"
+output: html_document
+---
+
+Find two repetitive things that you would like to be able to do with your data.  This can be something having to do with coding variables, or saving plots, or running an analysis multiple times on different subsets, etc. etc.  Just try to find something where you would normally need to "copy and paste" sections of code, varying only one or two things.  Figure out how to use a loop to accomplish this.  
+
+For BOTH of these things, take the following steps:
+
+1. Articulate what you want to do (verbally)
+
+2. Give some code that illustrates the "copy and paste" method.  This can just show a couple of steps.  That is, if you would be running through a bunch of iterations, just copy and paste a couple of times, not everything.
+
+3. Work this code into a loop format, so that no copy & paste is neccesary.  You will need to set up a "counter" variable that cycles through various values (which do not have to be numeric), changing with every pass through the loop.  But you may also need to make other changes to your code to accommodate the loop.
+
+As usual, send me your .Rmd file with any data I need to replicate your results.
