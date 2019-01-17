@@ -109,9 +109,47 @@ ifelse(x %% 2 == 0, "even",
   - avoid re-writing code, when possible!
 
 ```{r}
+# simple vectorized
+x <- 1:10
+x + 2
+x[1] + 2
+x[2] + 2
+
 # basic structure of a loop
+for(counter in 1:10) {
+  print(counter)
+}
+
+for(counter in c("here", "are", "some", "strings")) {
+  print(counter)
+}
+
+values.to.print <- c("a", "bee", "c", "dee")
+for(counter in values.to.print) { # behind the scenes :  counter <- "a" ... etc.
+  if(nchar(counter) == 1) {
+    print(counter)
+  } else {
+    break
+  } 
+}
 
 # going from copy-paste to a loop
+mysleep <- sleep
+summary(mysleep)
+
+summary(mysleep[mysleep$group == "1", ])
+summary(filter(mysleep, group == "1"))
+
+summary(mysleep[mysleep$group == "1", ])
+summary(mysleep[mysleep$group == "2", ])
+
+for(this.group in c("1", "2")) {
+  print(summary(mysleep[mysleep$group == this.group, ])) 
+}
+
+for(i in c("1", "2")) {
+  print(i)
+}
 
 ```
 
@@ -119,21 +157,25 @@ ifelse(x %% 2 == 0, "even",
 
 ```{r}
 # "Poor man's progress bar"
-
+for(counter in 1:1000) {
+  if(counter %% 100 == 0) { cat(paste("Starting iteration", counter, "\n")) }
+  mymean <- mean(rnorm(1e5))
+}
 
 # using get() to access objects programmatically
 ggplot(iris, aes(Sepal.Width)) + geom_histogram()
 ggplot(iris, aes("Sepal.Width")) + geom_histogram()
 ggplot(iris, aes(get("Sepal.Width"))) + geom_histogram()
 
+
 # you need explicit "print" statements inside loops
 for(this.dim in colnames(iris)[1:4]) {
-  
+  print(this.dim)
 }
 
 # also for plots!
 for(this.dim in colnames(iris)[1:4]) {
-  
+  print(ggplot(iris, aes(get(this.dim))) + geom_histogram() + xlab(this.dim))
 }
 
 ```

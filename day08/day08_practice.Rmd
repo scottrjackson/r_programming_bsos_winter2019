@@ -11,6 +11,8 @@ output: html_document
 mystring <- "right"
 mystring <- "wrong"
 mystring <- "maybe"
+mystring <- NA
+mystring <- c("one", "wrong")
 
 if(mystring %in% "right") {
   print("you win!")
@@ -19,6 +21,25 @@ if(mystring %in% "right") {
 } else {
   print("the result is inconclusive")
 }
+
+myfunc <- function(mystring) {
+  
+  if(mystring %in% "right") {
+    output <- "you win!"
+  } else if(mystring %in% "wrong") {
+    output <- "you lose!"
+  } else {
+    output <- "the result is inconclusive"
+  }
+  return(output)
+}
+
+myfunc("right")
+myfunc("wrong")
+myfunc("something else")
+
+mystrings <- c("right", "wrong", "something else")
+sapply(mystrings, FUN = myfunc)
 
 ```
 
@@ -33,6 +54,9 @@ if(mystring %in% "right") {
 myris <- iris
 myris$ordinal.length <- ifelse(myris$Sepal.Length < 5, "low",
                                ifelse(myris$Sepal.Length > 6, "high", "mid"))
+
+myris$ordinal.length <- factor(myris$ordinal.length, levels = c("low", "mid", "high"))
+
 ggplot(myris, aes(Sepal.Length)) + geom_histogram(aes(fill = ordinal.length))
 
 ```
@@ -47,6 +71,38 @@ ggplot(myris, aes(Sepal.Length)) + geom_histogram(aes(fill = ordinal.length))
 "Level number 3 of Species is virginica"
 
 ```{r}
+# stepwise construction of the loop
+
+# what I want:
+# print(paste("Level number", SPECIESNUMBER, "of Species is", SPECIES))
+# how do I loop over SPECIES and SPECIESNUMBER?
+levels(iris$Species)
+levels(iris$Species)[1]
+
+for(levelnum in 1:length(levels(iris$Species))) {
+   print(levelnum)
+}
+
+for(levelnum in 1:length(levels(iris$Species))) {
+   print(paste("Level number", levelnum))
+}
+
+for(levelnum in 1:length(levels(iris$Species))) {
+  this.level <- levels(iris$Species)[levelnum]
+  print(paste("Level number", levelnum, "of Species is", this.level))
+}
+
+# with "cat" instead of "print"
+for(levelnum in 1:length(levels(iris$Species))) {
+  this.level <- levels(iris$Species)[levelnum]
+  cat(paste("Level number", levelnum, "of Species is", this.level, "\n"))
+}
+
+# looping through strings
+for(this.level in levels(iris$Species)) {   
+  levelnum <- which(levels(iris$Species) %in% this.level)
+  print(paste("Level number", levelnum, "of Species is", this.level))
+}
 
 
 ```
@@ -61,37 +117,33 @@ ggplot(myris, aes(Sepal.Length)) + geom_histogram(aes(fill = ordinal.length))
 # ggtitle() example
 ggplot(iris, aes(Sepal.Width)) + geom_histogram() + ggtitle("All species")
 
-```
+# do something once
+pdf("all species plot.pdf")
+ggplot(iris, aes(Sepal.Width)) + geom_histogram() + ggtitle("All species")
+dev.off()
 
-# Section 2
+# construct the loop
+for(levelnum in 1:length(levels(iris$Species))) {
+  this.level <- levels(iris$Species)[levelnum]
+  # print(paste("Level number", levelnum, "of Species is", this.level))
+  this.data <- iris[iris$Species %in% this.level, ]
+  # this.data <- filter(iris, Species %in% this.level)  # dplyr way of subsetting also fine here
+  pdf(paste(this.level, "plot.pdf"))
+  print(ggplot(this.data, aes(Sepal.Width)) + geom_histogram() + ggtitle(this.level))
+  dev.off()
+}
 
-4. Similar to what we did with the correlation power simulations, write code (including a loop) that creates a power simulation for comparing the means of two normally-distributed samples.
-  - compare the sample with both `t.test()` and `wilcox.test()`
-  - put the p-values from both tests in each simulation result
-  - compare the power of the t-test vs. the power of the Wilcoxon test
-  
-```{r}
-# set up the parameters of the simulation
-n.sim <- 1000
-# what other parameters are needed?
+# multiple page PDF
+pdf("species plots.pdf")
 
-# set up the "empty" data frame for the results
-sim.results <- data.frame(# WHAT SHOULD YOUR COLUMNS BE? 
-                          )
+for(levelnum in 1:length(levels(iris$Species))) {
+  this.level <- levels(iris$Species)[levelnum]
+  # print(paste("Level number", levelnum, "of Species is", this.level))
+  this.data <- iris[iris$Species %in% this.level, ]
+  # this.data <- filter(iris, Species %in% this.level)  # dplyr way of subsetting also fine here
+  print(ggplot(this.data, aes(Sepal.Width)) + geom_histogram() + ggtitle(this.level))
+}
 
-# start the loop
-# each iteration of the loop should:
-# 1. generate data
-# 2. perform the analysis
-# 3. store the results (here, p-values) in the results data frame
-
-
-# examine the results
-# create a column that indicates which of the p-values reached significance
-
-
-# power = the proportion of "significant" results
-
+dev.off()
 
 ```
-
