@@ -8,7 +8,17 @@ output: html_document
 1. Write an if...else statement to test whether a string matches "right", and if so, print "you win!", but if the string matches "wrong", print "you lose!", and if it's neither, print "the result is inconclusive".
 
 ```{r}
+mystring <- "right"
+mystring <- "wrong"
+mystring <- "maybe"
 
+if(mystring %in% "right") {
+  print("you win!")
+} else if(mystring %in% "wrong") {
+  print("you lose!")
+} else {
+  print("the result is inconclusive")
+}
 
 ```
 
@@ -20,7 +30,10 @@ output: html_document
   - make a plot in ggplot2 to confirm that you did this right
   
 ```{r}
-
+myris <- iris
+myris$ordinal.length <- ifelse(myris$Sepal.Length < 5, "low",
+                               ifelse(myris$Sepal.Length > 6, "high", "mid"))
+ggplot(myris, aes(Sepal.Length)) + geom_histogram(aes(fill = ordinal.length))
 
 ```
 

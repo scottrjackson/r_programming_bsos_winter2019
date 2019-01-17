@@ -16,6 +16,47 @@ output: html_document
 
 # Questions/review?
 
+```{r}
+mydata <- data.frame(n = 1:10,
+                     measure = rnorm(10),
+                     myfactor = c(rep("pre", 4), rep("post", 6)),
+                     stringsAsFactors = FALSE)
+
+head(mydata)
+summary(mydata)
+
+mydata$myfactor2 <- as.factor(mydata$myfactor)
+summary(mydata)
+levels(mydata$myfactor2)
+
+mydata$myfactor2 <- factor(mydata$myfactor, levels = c("pre", "post"))
+summary(mydata)
+levels(mydata$myfactor2)
+
+mydata$myfactor3 <- factor(mydata$myfactor, levels = c("pre", "post", "something else"))
+
+mydata$myfactor4 <- factor(mydata$myfactor, levels = c("pre", "pos"))
+
+summary(mydata)
+
+mydata2 <- data.frame(year = rep(2005:2010, 3),
+                      country = rep(c("USA", "Afghanistan", "Mexico"), each = 6))
+mydata2
+
+mydata2 <- expand.grid(2008:2010, c("USA", "Afghanistan", "Mexico"))
+colnames(mydata2) <- c("year", "country")
+mydata2$income <- rnorm(nrow(mydata2))
+mydata2
+
+mydata2.wide <- spread(mydata2, country, income)
+mydata2.wide
+
+gather(mydata2.wide, country, income, Afghanistan:Mexico)
+gather(mydata2.wide, country, income, USA:Mexico)
+
+```
+
+
 # if/else
   - form: if(LOGICAL TEST) { CODE BLOCK if TEST == TRUE  }
   -       else if(OPTIONAL ADDITIONAL TEST) { CODE BLOCK if TRUE }
@@ -24,6 +65,28 @@ output: html_document
 
 ```{r}
 # simple examples
+x <- 6
+if(x < 5) {
+  print("x is small")
+}
+
+x <- 3
+if(x < 5) {
+  print("x is small")
+} else {
+  print("x must be large")
+}
+
+x <- 1:6
+if(is.na(x)) {
+  print("x is missing, go find an x!")
+} else if(x < 5) {
+  print("x is too small")
+} else if(x > 5) {
+  print("x is too large")
+} else {
+  print("x is juuuust right")
+}
 
 ```
 
@@ -31,7 +94,11 @@ output: html_document
     - arguments are: test = [LOGICAL TEST], yes = [VALUE if TEST == TRUE], no = [VALUE if TEST == FALSE]
 
 ```{r} 
+x <- 1:10
+ifelse(x %% 2 == 0, "even", "odd")
 
+ifelse(x %% 2 == 0, "even", 
+       ifelse(x %% 3 == 0, "divisible by three", "some other odd"))
 
 ```
 
