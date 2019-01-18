@@ -8,6 +8,16 @@ output: html_document
   - More on functions
   - Vectorization
 
+# Packages for today
+
+```{r}
+library(MASS)
+library(tidyverse)
+library(reshape2)
+
+```
+
+
 # Loops
 
 ## Using a loop for a repetitive task
@@ -48,7 +58,7 @@ lm.versicolor <- lm(Sepal.Width ~ Sepal.Length, data = my.iris[my.iris$Species =
 lm.virginica <- lm(Sepal.Width ~ Sepal.Length, data = my.iris[my.iris$Species == "virginica", ])
 
 # with a loop
-all.species <- unique(as.character(my.iris$Species))
+all.species <- unique(as.character(my.iris$Species)) # could have used levels()
 # all.species <- "some other value" # alternative
 
 # set up container to "store" results
@@ -56,17 +66,41 @@ byspecies.results <- list()
 length(byspecies.results) <- length(all.species)
 names(byspecies.results) <- all.species
 
+pdf("plots of regressions.pdf")
 # loop over species names
+# this.species <- "setosa" # "test case"
 for(this.species in all.species) {
   # run the analysis, plug the results into the "results container"
-  byspecies.results[[this.species]] <- lm(Sepal.Width ~ Sepal.Length, data = my.iris[my.iris$Species == this.species, ])
+  this.data <- my.iris[my.iris$Species == this.species, ]
+  byspecies.results[[this.species]] <- 
+    lm(Sepal.Width ~ Sepal.Length, data = this.data)
+  
+  print(ggplot(this.data, aes(Sepal.Length, Sepal.Width)) + geom_point() + 
+    geom_smooth(method = "lm") + ggtitle(this.species))
+  
 }
+dev.off()
 
 length(byspecies.results)
 class(byspecies.results[1])
 class(byspecies.results[[1]])
 summary(byspecies.results[[1]])
 lapply(byspecies.results, summary)
+
+ggplot(iris, aes(Sepal.Length, Sepal.Width)) + geom_point() + geom_smooth() + 
+  facet_wrap(~ Species)
+
+```
+
+PNG example (for Word docs)
+
+
+```{r}
+
+png("iris regression.png", height = 2, width = 2, units = "in", res = 300)
+ggplot(iris, aes(Sepal.Length, Sepal.Width)) + geom_point() + 
+    geom_smooth(method = "lm") + ggtitle("iris regression")
+dev.off()
 
 ```
 
@@ -90,7 +124,8 @@ for(counter in 1:1000) { # pretend that counter == 843 is bad, we want to skip i
   if(counter %in% c(843)) {
     
   } else {
-    # whole code block here 
+    # whole code block here
+    print(counter)
   }
 }
 
@@ -101,6 +136,24 @@ for(counter in 1:1000) { # pretend that counter == 843 is bad, we want to skip i
   - if you get an error, the counter variable is at the value when things broke
   - insert `print()` statements to check on things mid-loop
   - manually set the counter variable value, step through the loop
+
+```{r}
+log(rnorm(10, 3, 1))
+
+values <- rnorm(1e6, 3, 1)
+
+# create results "container"
+myresults <- vector()
+length(myresults) <- length(values)
+
+for(this.value in 1:length(values))  {
+  myresults[this.value] <- log(values[this.value])
+  if(is.na(myresults[this.value])) { break }
+}
+summary(myresults)
+
+```
+
 
 ===========
 # Functions
@@ -116,7 +169,9 @@ for(counter in 1:1000) { # pretend that counter == 843 is bad, we want to skip i
 
 ```{r eval = FALSE}
 my.function <- function(arg1, arg2, ...) {
-  #FUNCTION BODY  
+  #FUNCTION BODY 
+  return(the.value.you.want.returned)
+  # last value in function body is default for return()
 }
 
 ```
@@ -124,6 +179,22 @@ my.function <- function(arg1, arg2, ...) {
 ## Transitioning from a loop to a function
 
 ```{r}
+# with a loop
+all.species <- unique(as.character(my.iris$Species)) 
+
+# set up container to "store" results
+byspecies.results <- list()
+length(byspecies.results) <- length(all.species)
+names(byspecies.results) <- all.species
+
+# loop over species names
+for(this.species in all.species) {
+  this.data <- my.iris[my.iris$Species == this.species, ]
+  byspecies.results[[this.species]] <- 
+    lm(Sepal.Width ~ Sepal.Length, data = this.data)
+}
+
+
 
 
 ```
